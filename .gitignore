@@ -63,6 +63,7 @@ gradle-app.setting
 # *.properties
 
 # IDE specific files
+.vscode/
 .idea/
 *.iml
 
@@ -78,5 +79,6 @@ gradle-app.setting
 
 # etc.
 HELP.md
+bin/
 
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle
