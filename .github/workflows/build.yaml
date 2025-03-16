@@ -1,0 +1,60 @@
+name: Build test & Push
+
+on:
+  pull_request:
+    branches: [ main, dev ]
+  push:
+    branches: [ main, dev ]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: setup-java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: 'oracle'
+
+      # setup database
+      - name: setup database
+        uses: ikalnytskyi/action-setup-postgres@v7
+        with:
+          username: ${{ secrets.DB_USERNAME }}
+          password: ${{ secrets.DB_PASSWORD }}
+          postgres-version: "15"
+      
+      # Gradle
+      - name: grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: build with gradle (without tests)
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: ./gradlew build -x test
+
+      - name: run tests
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: ./gradlew test
+
+      # build & push docker image
+      - name: log in to docker hub
+        if: github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: build & push docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: Dockerfile
+          tags: ${{ secrets.DOCKER_TAG }}
