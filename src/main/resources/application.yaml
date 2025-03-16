@@ -2,6 +2,7 @@ spring:
   application:
     name: community-service
   config:
+    #    activate.on-profile: dev
     import:
       optional:file:.env[.properties]
   datasource:
@@ -12,25 +13,21 @@ spring:
   jackson:
     time-zone: Asia/Seoul
   jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
+    hibernate.ddl-auto: update
     properties:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
+        highlight_sql: true
 logging:
   level:
     org:
       hibernate:
         SQL: debug
-        type:
-          descriptor:
-            sql:
-              BasicBinder: trace
+        orm.jdbc.bind: trace
       springframework:
+        orm.jpa: debug
         web: debug
-
-server:
-  port: ${PORT}
+        transaction: debug
+#server:
+#  port: ${PORT}
