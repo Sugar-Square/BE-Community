@@ -60,14 +60,14 @@ gradle-app.setting
 *.p12
 *.jks
 *.env
-*.properties
+# *.properties
 
 # IDE specific files
 .idea/
 *.iml
 
 # Local configuration files
-local.properties
+# local.properties
 
 # Database files
 *.db
