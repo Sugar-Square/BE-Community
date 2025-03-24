@@ -1,0 +1,17 @@
+# GRADLE
+gradle/
+
+#IDE
+*.iml
+.idea/
+.vscode/
+
+# GIT
+.git/
+.gitignore
+.github/
+
+# ETC.
+*.DS_Store
+.env
+
