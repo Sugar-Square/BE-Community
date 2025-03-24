@@ -34,6 +34,7 @@ jobs:
           DB_URL: ${{ secrets.DB_URL }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          SPRING_PROFILES_ACTIVE: "prod"
         run: ./gradlew build -x test
 
       - name: run tests
@@ -41,6 +42,7 @@ jobs:
           DB_URL: ${{ secrets.DB_URL }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          SPRING_PROFILES_ACTIVE: "prod"
         run: ./gradlew test
 
       # build & push docker image
