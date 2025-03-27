@@ -9,12 +9,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.Instant;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.sugar_square.community_service.domain.BaseEntity;
 import org.sugar_square.community_service.domain.member.Member;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Schedule extends BaseEntity {
 
   @Id
@@ -23,10 +27,10 @@ public class Schedule extends BaseEntity {
   private Long id;
 
   @Column(nullable = false)
-  private Instant scheduleDate;
+  private Instant scheduleDate; // TODO: DTO 에서 한 번 더 null 검증
 
   @Column(nullable = false)
-  private String title;
+  private String title; // TODO: DTO 에서 한 번 더 null 검증
 
   private Instant notificationDate;
 
@@ -35,12 +39,25 @@ public class Schedule extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id", nullable = false, updatable = false)
-  private Member member;
+  private Member member; // TODO: DTO 에서 한 번 더 null 검증
+
+  @Builder
+  private Schedule(
+      Instant scheduleDate,
+      String title,
+      Instant notificationDate,
+      String content,
+      Member member) {
+    this.scheduleDate = scheduleDate;
+    this.title = title;
+    this.notificationDate = notificationDate;
+    this.content = content;
+    this.member = member;
+  }
 
   /*
    * TODO:
-   *  1. 일정 생성/삭제/수정 메서드
-   *  2. 일정 시간 수정 메서드
-   *  3. 알림 시간 수정 메서드 (일정 시간의 상대적 시간을 받아서 수정)
+   *  1. 일정 시간 수정 메서드
+   *  2. 알림 시간 수정 메서드 (일정 시간의 상대적 시간을 받아서 수정)
    *  */
 }

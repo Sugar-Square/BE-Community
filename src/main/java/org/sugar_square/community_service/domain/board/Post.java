@@ -8,12 +8,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.sugar_square.community_service.domain.BaseEntity;
 import org.sugar_square.community_service.domain.member.Member;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 
   @Id
@@ -30,18 +34,23 @@ public class Post extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id", nullable = false, updatable = false)
-  private Member member;
+  private Member member; // TODO: DTO 에서 한 번 더 null 검증
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "category_id", nullable = false)
-  private Category category;
+  private Category category; // TODO: DTO 에서 한 번 더 null 검증
 
   // TODO: 추후 이미지 관련 엔티티 및 관계 추가 고민
 
-  /*
-   * TODO:
-   *  1. viewCount 증가 메서드
-   *  2. 게시글 생성/삭제/수정 메서드
-   *  3. 연관관계 메서드 ( Member, Category, Comment 생성 / 삭제 )
-   *  */
+  @Builder
+  private Post(String title, String content, Member member, Category category) {
+    this.title = title;
+    this.content = content;
+    this.member = member;
+    this.category = category;
+  }
+
+  public void increaseViewCount() {
+    this.viewCount++;
+  }
 }

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 
 @Embeddable
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @AllArgsConstructor
 @EqualsAndHashCode
 public class AnchoredPostPK implements Serializable {

@@ -10,12 +10,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.sugar_square.community_service.domain.BaseEntity;
 import org.sugar_square.community_service.domain.member.Member;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Report extends BaseEntity {
 
   @Id
@@ -36,10 +40,15 @@ public class Report extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id", nullable = false, updatable = false)
-  private Member member;
+  private Member member; // TODO: DTO 에서 한 번 더 null 검증
 
-  /*
-   * TODO:
-   *  1. report 생성/삭제 메서드
-   * */
+  @Builder
+  private Report(String title, String content, ErrorGroup errorGroup, ErrorCode errorCode,
+      Member member) {
+    this.title = title;
+    this.content = content;
+    this.errorGroup = errorGroup;
+    this.errorCode = errorCode;
+    this.member = member;
+  }
 }

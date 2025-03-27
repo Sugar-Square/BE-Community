@@ -7,11 +7,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.sugar_square.community_service.domain.BaseEntity;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Role extends BaseEntity {
 
   @Id
@@ -21,5 +24,9 @@ public class Role extends BaseEntity {
 
   @Column(nullable = false, unique = true)
   @Enumerated(EnumType.STRING)
-  private RoleEnum name;
+  private RoleEnum name; // TODO: DTO 에서 한 번 더 null 검증
+
+  public Role(RoleEnum name) {
+    this.name = name;
+  }
 }
