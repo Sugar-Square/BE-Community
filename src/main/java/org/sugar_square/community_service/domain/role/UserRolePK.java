@@ -19,10 +19,10 @@ import org.sugar_square.community_service.domain.member.Member;
 public class UserRolePK implements Serializable {
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "member_id", nullable = false)
+  @JoinColumn(name = "member_id", nullable = false, updatable = false)
   private Member member;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "role_id", nullable = false)
+  @JoinColumn(name = "role_id", nullable = false, updatable = false)
   private Role role;
 }

@@ -18,7 +18,7 @@ public class Post extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "post_id", nullable = false)
+  @Column(name = "post_id", nullable = false, updatable = false)
   private Long id;
 
   private String title;
@@ -26,15 +26,14 @@ public class Post extends BaseEntity {
   @Column(columnDefinition = "TEXT")  // postgresql TEXT
   private String content = "";
 
-  @Column(nullable = false)
   private Long viewCount = 0L;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "member_id")
+  @JoinColumn(name = "member_id", nullable = false, updatable = false)
   private Member member;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "category_id")
+  @JoinColumn(name = "category_id", nullable = false)
   private Category category;
 
   // TODO: 추후 이미지 관련 엔티티 및 관계 추가 고민

@@ -19,6 +19,7 @@ public class Schedule extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "schedule_id", nullable = false, updatable = false)
   private Long id;
 
   @Column(nullable = false)
@@ -33,7 +34,7 @@ public class Schedule extends BaseEntity {
   private String content;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "member_id")
+  @JoinColumn(name = "member_id", nullable = false, updatable = false)
   private Member member;
 
   /*

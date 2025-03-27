@@ -21,18 +21,18 @@ public class Comment extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "comment_id", nullable = false)
+  @Column(name = "comment_id", nullable = false, updatable = false)
   private Long id;
 
   @Column(columnDefinition = "TEXT") // postgresql TEXT
   private String content = "";
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "member_id")
+  @JoinColumn(name = "member_id", nullable = false, updatable = false)
   private Member member;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "post_id")
+  @JoinColumn(name = "post_id", nullable = false, updatable = false)
   private Post post;
 
   @ManyToOne(fetch = FetchType.LAZY)

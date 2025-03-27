@@ -20,24 +20,22 @@ public class Report extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "report_id", nullable = false)
+  @Column(name = "report_id", nullable = false, updatable = false)
   private Long id;
-  
+
   private String title;
 
   @Column(columnDefinition = "TEXT")
   private String content;
 
-  @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private ErrorGroup errorGroup;
 
-  @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private ErrorCode errorCode;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "member_id")
+  @JoinColumn(name = "member_id", nullable = false, updatable = false)
   private Member member;
 
   /*
