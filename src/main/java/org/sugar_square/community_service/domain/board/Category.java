@@ -9,11 +9,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLRestriction;
 import org.sugar_square.community_service.domain.BaseEntity;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLRestriction("deleted_at IS NULL")
 public class Category extends BaseEntity {
 
   @Id
