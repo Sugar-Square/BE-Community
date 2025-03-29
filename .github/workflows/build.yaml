@@ -35,7 +35,7 @@ jobs:
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           SPRING_PROFILES_ACTIVE: "prod"
-        run: ./gradlew build -x test
+        run: ./gradlew build -x test --build-cache --parallel
 
       - name: run tests
         env:
@@ -43,7 +43,7 @@ jobs:
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           SPRING_PROFILES_ACTIVE: "prod"
-        run: ./gradlew test
+        run: ./gradlew test --stacktrace -info
 
       # build & push docker image
       - name: log in to docker hub
