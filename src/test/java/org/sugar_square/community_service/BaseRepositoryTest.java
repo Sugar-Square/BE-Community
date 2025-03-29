@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.sugar_square.community_service.domain.member.Member;
-import org.sugar_square.community_service.repository.MemberRepository;
+import org.sugar_square.community_service.repository.member.MemberRepository;
 
 @SpringBootTest
 public class BaseRepositoryTest {
