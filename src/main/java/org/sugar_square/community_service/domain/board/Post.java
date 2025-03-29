@@ -34,7 +34,7 @@ public class Post extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id", nullable = false, updatable = false)
-  private Member member; // TODO: DTO 에서 한 번 더 null 검증
+  private Member writer; // TODO: DTO 에서 한 번 더 null 검증
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "category_id", nullable = false)
@@ -43,10 +43,10 @@ public class Post extends BaseEntity {
   // TODO: 추후 이미지 관련 엔티티 및 관계 추가 고민
 
   @Builder
-  private Post(String title, String content, Member member, Category category) {
+  private Post(String title, String content, Member writer, Category category) {
     this.title = title;
     this.content = content;
-    this.member = member;
+    this.writer = writer;
     this.category = category;
   }
 

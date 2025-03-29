@@ -39,7 +39,7 @@ public class Schedule extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id", nullable = false, updatable = false)
-  private Member member; // TODO: DTO 에서 한 번 더 null 검증
+  private Member writer; // TODO: DTO 에서 한 번 더 null 검증
 
   @Builder
   private Schedule(
@@ -47,12 +47,12 @@ public class Schedule extends BaseEntity {
       String title,
       Instant notificationDate,
       String content,
-      Member member) {
+      Member writer) {
     this.scheduleDate = scheduleDate;
     this.title = title;
     this.notificationDate = notificationDate;
     this.content = content;
-    this.member = member;
+    this.writer = writer;
   }
 
   /*

@@ -33,7 +33,7 @@ public class Comment extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id", nullable = false, updatable = false)
-  private Member member; // TODO: DTO 에서 한 번 더 null 검증
+  private Member writer; // TODO: DTO 에서 한 번 더 null 검증
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "post_id", nullable = false, updatable = false)
@@ -47,9 +47,9 @@ public class Comment extends BaseEntity {
   private List<Comment> children = new ArrayList<>();
 
   @Builder
-  private Comment(String content, Member member, Post post, Comment parent) {
+  private Comment(String content, Member writer, Post post, Comment parent) {
     this.content = content;
-    this.member = member;
+    this.writer = writer;
     this.post = post;
     if (parent != null) {
       parent.addChild(this);
