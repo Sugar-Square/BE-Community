@@ -15,7 +15,7 @@ public class ControllerExceptionHandler {
     return new ErrorResponse("post register failed", e.getMessage());
   }
 
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   @ExceptionHandler
   public ErrorResponse handleAnyException(Exception e) {
     return new ErrorResponse("server internal exception", e.getMessage());
