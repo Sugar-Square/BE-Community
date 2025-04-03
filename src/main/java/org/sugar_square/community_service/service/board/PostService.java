@@ -22,10 +22,8 @@ public class PostService {
 
   @Transactional(readOnly = false)
   public Long register(
-      final String title,
-      final String content,
-      final Long memberId,
-      final Long categoryId) {
+      final String title, final String content, final Long memberId, final Long categoryId
+  ) {
     Member writer = memberService.findOneById(memberId);
     Category category = categoryService.findOneById(categoryId);
     Post registered = Post.builder()
