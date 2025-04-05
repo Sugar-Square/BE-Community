@@ -18,6 +18,7 @@ public class BaseRepositoryTest {
 
   @Autowired
   MemberRepository memberRepository;
+
   private Member member;
 
   @BeforeEach
@@ -41,7 +42,7 @@ public class BaseRepositoryTest {
   @Test
   @DisplayName("soft delete 조회 테스트")
   void softDeleteTest() {
-    memberRepository.softDelete(member.getId());
+    memberRepository.softDeleteById(member.getId());
     Optional<Member> result = memberRepository.findById(member.getId());
     assertThat(result).isEmpty();
   }
@@ -49,14 +50,8 @@ public class BaseRepositoryTest {
   @Test
   @DisplayName("delete 테스트")
   void deleteTest() {
-    Member member2 = Member.builder()
-        .username("test2")
-        .password("test2")
-        .nickname("test2")
-        .build();
-    Member savedMember = memberRepository.save(member2);
-    memberRepository.delete(savedMember);
-    Optional<Member> result = memberRepository.findById(member2.getId());
+    memberRepository.delete(member);
+    Optional<Member> result = memberRepository.findById(member.getId());
     assertThat(result).isEmpty();
   }
 }
