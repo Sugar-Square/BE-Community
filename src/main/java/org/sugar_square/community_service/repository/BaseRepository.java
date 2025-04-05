@@ -11,8 +11,11 @@ import org.sugar_square.community_service.domain.BaseEntity;
 @NoRepositoryBean
 public interface BaseRepository<T extends BaseEntity, ID> extends JpaRepository<T, ID> {
 
+  /**
+   * 영속성 컨텍스트 자동 clear 이후 기존 엔티티는 준영속 상태가 된다.
+   */
   @Transactional
-  @Modifying
+  @Modifying(clearAutomatically = true)
   @Query("UPDATE #{#entityName} e SET e.deletedAt = CURRENT_TIMESTAMP WHERE e.id = :id")
-  void softDelete(@Param("id") ID id);
+  void softDeleteById(@Param("id") ID id);
 }
