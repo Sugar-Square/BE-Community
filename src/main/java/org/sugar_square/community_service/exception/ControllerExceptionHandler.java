@@ -12,7 +12,7 @@ public class ControllerExceptionHandler {
   @ResponseStatus(HttpStatus.NOT_FOUND)
   @ExceptionHandler(EntityNotFoundException.class)
   public ErrorResponse handleEntityNotFoundException(EntityNotFoundException e) {
-    return new ErrorResponse("post register failed", e.getMessage());
+    return new ErrorResponse("entity not found", e.getMessage());
   }
 
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

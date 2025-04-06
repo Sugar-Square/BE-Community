@@ -17,7 +17,7 @@ public record PostRequestDTO(
    * 새로운 엔티티를 등록할 경우만 사용.
    */
   @Override
-  public Post dtoToEntity(Object... args) {
+  public Post toEntity(Object... args) {
     Member writer = (Member) args[0];
     Category category = (Category) args[1];
     return Post.builder()
@@ -26,10 +26,5 @@ public record PostRequestDTO(
         .writer(writer)
         .category(category)
         .build();
-  }
-
-  @Override
-  public void updateEntity() {
-    // TODO: post entity update 메서드 작성
   }
 }
