@@ -27,9 +27,4 @@ public record PostRequestDTO(
         .category(category)
         .build();
   }
-
-  @Override
-  public void updateEntity() {
-    // TODO: post entity update 메서드 작성
-  }
 }
