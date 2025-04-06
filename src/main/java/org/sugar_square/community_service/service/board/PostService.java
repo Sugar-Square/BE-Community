@@ -40,7 +40,7 @@ public class PostService {
 
   public PostResponseDTO readOneById(final Long postId) {
     Post foundPost = findOneById(postId);
-    return PostResponseDTO.entityToDto(foundPost);
+    return PostResponseDTO.fromEntity(foundPost);
   }
 
   public Post findOneById(final Long postId) {
