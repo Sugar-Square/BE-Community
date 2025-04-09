@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.sugar_square.community_service.domain.board.Category;
 import org.sugar_square.community_service.domain.board.Post;
 import org.sugar_square.community_service.domain.member.Member;
+import org.sugar_square.community_service.dto.board.PostModifyDTO;
 import org.sugar_square.community_service.dto.board.PostResponseDTO;
 import org.sugar_square.community_service.exception.EntityNotFoundException;
 import org.sugar_square.community_service.repository.board.PostRepository;
@@ -43,6 +44,13 @@ public class PostService {
     Post foundPost = findOneById(postId);
     foundPost.increaseViewCount();
     return PostResponseDTO.fromEntity(foundPost);
+  }
+
+  @Transactional(readOnly = false)
+  public void modify(final Long postId, final PostModifyDTO modifyDTO) {
+    Post foundPost = findOneById(postId);
+    Category newCategory = categoryService.findOneById(modifyDTO.categoryId());
+    foundPost.update(modifyDTO.title(), modifyDTO.content(), newCategory);
   }
 
   public Post findOneById(final Long postId) {

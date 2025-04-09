@@ -7,9 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.sugar_square.community_service.dto.board.PostModifyDTO;
 import org.sugar_square.community_service.dto.board.PostRequestDTO;
 import org.sugar_square.community_service.dto.board.PostResponseDTO;
 import org.sugar_square.community_service.service.board.PostService;
@@ -37,5 +39,14 @@ public class PostController {
   public ResponseEntity<PostResponseDTO> readPost(@PathVariable Long postId) {
     PostResponseDTO responseDto = postService.readOneById(postId);
     return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+  }
+
+  @PutMapping("/{postId}")
+  public ResponseEntity<String> modifyPost(
+      @PathVariable Long postId,
+      @RequestBody @Valid PostModifyDTO modifyDTO
+  ) {
+    postService.modify(postId, modifyDTO);
+    return ResponseEntity.status(HttpStatus.OK).body("post modified successfully");
   }
 }

@@ -55,4 +55,10 @@ public class Post extends BaseEntity {
   public void increaseViewCount() {
     this.viewCount++;
   }
+
+  public void update(String title, String content, Category category) {
+    this.title = title;
+    this.content = content;
+    this.category = category;
+  }
 }
