@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.sugar_square.community_service.domain.board.Category;
 import org.sugar_square.community_service.domain.board.Post;
 import org.sugar_square.community_service.domain.member.Member;
+import org.sugar_square.community_service.dto.board.PostRegisterDTO;
 import org.sugar_square.community_service.dto.board.PostResponseDTO;
 import org.sugar_square.community_service.exception.EntityNotFoundException;
 import org.sugar_square.community_service.repository.board.PostRepository;
@@ -23,14 +24,12 @@ public class PostService {
   private final MemberService memberService;
 
   @Transactional(readOnly = false)
-  public Long register(
-      final String title, final String content, final Long memberId, final Long categoryId
-  ) {
-    Member writer = memberService.findOneById(memberId);
-    Category category = categoryService.findOneById(categoryId);
+  public Long register(PostRegisterDTO registerDTO) {
+    Member writer = memberService.findOneById(registerDTO.memberId());
+    Category category = categoryService.findOneById(registerDTO.categoryId());
     Post registered = Post.builder()
-        .title(title)
-        .content(content)
+        .title(registerDTO.title())
+        .content(registerDTO.content())
         .writer(writer)
         .category(category)
         .build();
