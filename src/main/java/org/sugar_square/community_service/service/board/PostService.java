@@ -38,8 +38,10 @@ public class PostService {
     return result.getId();
   }
 
+  @Transactional(readOnly = false)
   public PostResponseDTO readOneById(final Long postId) {
     Post foundPost = findOneById(postId);
+    foundPost.increaseViewCount();
     return PostResponseDTO.fromEntity(foundPost);
   }
 
