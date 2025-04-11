@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import org.sugar_square.community_service.domain.board.Category;
 import org.sugar_square.community_service.domain.member.Member;
+import org.sugar_square.community_service.dto.board.PostRegisterDTO;
 import org.sugar_square.community_service.repository.board.CategoryRepository;
 import org.sugar_square.community_service.repository.member.MemberRepository;
 import org.sugar_square.community_service.service.board.PostService;
@@ -34,14 +35,11 @@ public class PostServiceTest {
         .nickname("test")
         .build();
     Category category = Category.builder().build();
-    memberRepository.save(member);
-    categoryRepository.save(category);
-    Long registeredId = postService.register(
-        "test",
-        "test",
-        member.getId(),
-        category.getId()
-    );
+    Member savedMember = memberRepository.save(member);
+    Category savedCategory = categoryRepository.save(category);
+    PostRegisterDTO registerDTO = new PostRegisterDTO("test", "test", savedMember.getId(),
+        savedCategory.getId());
+    Long registeredId = postService.register(registerDTO);
     Assertions.assertThat(registeredId).isNotNull();
   }
 }

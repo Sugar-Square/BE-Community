@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.sugar_square.community_service.dto.board.PostModifyDTO;
-import org.sugar_square.community_service.dto.board.PostRequestDTO;
+import org.sugar_square.community_service.dto.board.PostRegisterDTO;
 import org.sugar_square.community_service.dto.board.PostResponseDTO;
 import org.sugar_square.community_service.service.board.PostService;
 
@@ -24,13 +23,8 @@ public class PostController {
   private final PostService postService;
 
   @PostMapping
-  public ResponseEntity<String> writePost(@RequestBody @Valid final PostRequestDTO requestDTO) {
-    Long savedPostId = postService.register(
-        requestDTO.title(),
-        requestDTO.content(),
-        requestDTO.memberId(),
-        requestDTO.categoryId()
-    );
+  public ResponseEntity<String> writePost(@RequestBody @Valid final PostRegisterDTO registerDTO) {
+    Long savedPostId = postService.register(registerDTO);
     return ResponseEntity.status(HttpStatus.CREATED)
         .body("postId : " + savedPostId); // TODO: 페이지 리다이렉트
   }
