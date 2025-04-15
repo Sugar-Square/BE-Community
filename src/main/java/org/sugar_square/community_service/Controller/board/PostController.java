@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.sugar_square.community_service.dto.board.PostModifyDTO;
 import org.sugar_square.community_service.dto.board.PostRegisterDTO;
 import org.sugar_square.community_service.dto.board.PostResponseDTO;
 import org.sugar_square.community_service.service.board.PostService;
