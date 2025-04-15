@@ -25,7 +25,7 @@ public class PostService {
   private final MemberService memberService;
 
   @Transactional(readOnly = false)
-  public Long register(PostRegisterDTO registerDTO) {
+  public Long register(final PostRegisterDTO registerDTO) {
     Member writer = memberService.findOneById(registerDTO.memberId());
     Category category = categoryService.findOneById(registerDTO.categoryId());
     Post registered = Post.builder()
@@ -50,6 +50,12 @@ public class PostService {
     Post foundPost = findOneById(postId);
     Category newCategory = categoryService.findOneById(modifyDTO.categoryId());
     foundPost.update(modifyDTO.title(), modifyDTO.content(), newCategory);
+  }
+
+  @Transactional(readOnly = false)
+  public void softDelete(final Long postId) {
+    Post foundPost = findOneById(postId);
+    postRepository.softDeleteById(foundPost.getId());
   }
 
   public Post findOneById(final Long postId) {
