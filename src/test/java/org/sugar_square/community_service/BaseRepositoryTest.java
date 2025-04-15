@@ -8,12 +8,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import org.sugar_square.community_service.domain.member.Member;
 import org.sugar_square.community_service.repository.member.MemberRepository;
 
 @SpringBootTest
 @Transactional
+@ActiveProfiles("test")
 public class BaseRepositoryTest {
 
   @Autowired

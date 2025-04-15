@@ -17,33 +17,13 @@ jobs:
         with:
           java-version: 21
           distribution: 'oracle'
-
-      # setup database
-      - name: setup database
-        uses: ikalnytskyi/action-setup-postgres@v7
-        with:
-          username: ${{ secrets.DB_USERNAME }}
-          password: ${{ secrets.DB_PASSWORD }}
-          postgres-version: "15"
       
       # Gradle
       - name: grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: build with gradle (without tests)
-        env:
-          DB_URL: ${{ secrets.DB_URL }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          SPRING_PROFILES_ACTIVE: "prod"
-        run: ./gradlew build -x test --build-cache --parallel
 
-      - name: run tests
-        env:
-          DB_URL: ${{ secrets.DB_URL }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          SPRING_PROFILES_ACTIVE: "dev"
-        run: ./gradlew test --stacktrace -info
+      - name: build test with gradle
+        run: ./gradlew build test --build-cache --parallel --stacktrace -info
 
       # build & push docker image
       - name: log in to docker hub
