@@ -1,4 +1,4 @@
-package org.sugar_square.community_service.Controller.board;
+package org.sugar_square.community_service.controller.board;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import org.sugar_square.community_service.service.board.PostService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/board")
+@RequestMapping("/posts")
 public class PostController {
 
   private final PostService postService;
