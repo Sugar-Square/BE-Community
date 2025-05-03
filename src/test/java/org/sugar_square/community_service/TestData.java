@@ -2,12 +2,14 @@ package org.sugar_square.community_service;
 
 import java.util.List;
 import lombok.Getter;
+import org.springframework.test.context.ActiveProfiles;
 import org.sugar_square.community_service.domain.board.Category;
 import org.sugar_square.community_service.domain.board.Comment;
 import org.sugar_square.community_service.domain.board.Post;
 import org.sugar_square.community_service.domain.member.Member;
 
 @Getter
+@ActiveProfiles("test")
 public class TestData {
 
   private final List<Member> members;

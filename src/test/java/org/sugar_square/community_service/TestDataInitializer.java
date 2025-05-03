@@ -60,8 +60,16 @@ public class TestDataInitializer {
   @Getter
   private final List<Comment> comments = new ArrayList<>();
 
+  private void clearLists() {
+    members.clear();
+    categories.clear();
+    posts.clear();
+    comments.clear();
+  }
+
   public void init() {
     final int DUMMY_COUNT = 10;
+    clearLists();
     for (int i = 0; i < DUMMY_COUNT; i++) {
       Member savedMember = memberRepository.save(
           Member.builder()

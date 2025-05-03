@@ -1,29 +1,27 @@
 package org.sugar_square.community_service.service;
 
-import static org.sugar_square.community_service.TestDataInitializer.CATEGORY_NAME;
-import static org.sugar_square.community_service.TestDataInitializer.MEMBER_NICKNAME;
+import static org.sugar_square.community_service.TestDataInitializer.POST_CONTENT;
 import static org.sugar_square.community_service.TestDataInitializer.POST_TITLE;
 
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+import org.sugar_square.community_service.TestData;
 import org.sugar_square.community_service.TestDataInitializer;
 import org.sugar_square.community_service.domain.board.Category;
 import org.sugar_square.community_service.domain.board.Post;
 import org.sugar_square.community_service.domain.member.Member;
 import org.sugar_square.community_service.dto.board.PostModifyDTO;
 import org.sugar_square.community_service.dto.board.PostRegisterDTO;
-import org.sugar_square.community_service.repository.board.CategoryRepository;
 import org.sugar_square.community_service.repository.board.PostRepository;
-import org.sugar_square.community_service.repository.member.MemberRepository;
 import org.sugar_square.community_service.service.board.PostService;
 
 @SpringBootTest
@@ -32,24 +30,21 @@ import org.sugar_square.community_service.service.board.PostService;
 public class PostServiceTest {
 
   @Autowired
-  private MemberRepository memberRepository;
-
-  @Autowired
-  private CategoryRepository categoryRepository;
-
-  @Autowired
   private PostService postService;
 
   @Autowired
   private PostRepository postRepository;
 
-  @BeforeAll
-  static void setup(@Autowired TestDataInitializer initializer) {
+  private TestData testData;
+
+  @BeforeEach
+  void setup(@Autowired TestDataInitializer initializer) {
     initializer.init();
+    testData = new TestData(initializer);
   }
 
-  @AfterAll
-  static void cleanup(@Autowired TestDataInitializer initializer) {
+  @AfterEach
+  void cleanup(@Autowired TestDataInitializer initializer) {
     initializer.clear();
   }
 
@@ -57,9 +52,9 @@ public class PostServiceTest {
   @DisplayName("게시물 저장 테스트")
   void registerTest() {
     //given
-    List<Member> members = memberRepository.findByNickname(MEMBER_NICKNAME + "0");
-    List<Category> categories = categoryRepository.findByName(CATEGORY_NAME + "0");
-    PostRegisterDTO registerDTO = new PostRegisterDTO("test title", "test content",
+    List<Member> members = testData.getMembers();
+    List<Category> categories = testData.getCategories();
+    PostRegisterDTO registerDTO = new PostRegisterDTO(POST_TITLE, POST_CONTENT,
         members.getFirst().getId(),
         categories.getFirst().getId());
     //when
@@ -72,8 +67,8 @@ public class PostServiceTest {
   @DisplayName("게시물 수정 테스트")
   void modifyTest() {
     //given
-    List<Category> categories = categoryRepository.findByName(CATEGORY_NAME + "0");
-    List<Post> posts = postRepository.findByTitle(POST_TITLE + "0");
+    List<Category> categories = testData.getCategories();
+    List<Post> posts = testData.getPosts();
     Long categoryId = categories.getFirst().getId();
     Long postId = posts.getFirst().getId();
     PostModifyDTO modifyDTO = new PostModifyDTO("modified title", "modified content", categoryId);
@@ -90,7 +85,7 @@ public class PostServiceTest {
   @DisplayName("게시물 삭제 테스트")
   void softDeleteTest() {
     //given
-    List<Post> posts = postRepository.findByTitle(POST_TITLE + "0");
+    List<Post> posts = testData.getPosts();
     Long postId = posts.getFirst().getId();
     //when
     postService.softDelete(postId);
