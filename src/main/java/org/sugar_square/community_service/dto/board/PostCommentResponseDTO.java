@@ -10,16 +10,20 @@ public record PostCommentResponseDTO(
     Long parentId,
     Long postId, // TODO: 필요한 속성인지 검토
     String content,
+    // 이하는 삭제된 comment 의 경우 null
     String writerNickname,
     Instant createdAt,
     Instant updatedAt
 ) {
 
-  public static PostCommentResponseDTO fromEntity(Comment entity) {
-    // TODO: 작성자, 카테고리 이름 변환
+  public static PostCommentResponseDTO fromEntity(final Comment entity) {
+    return entity.isDeleted() ? removedCommentToDTO(entity) : commentToDTO(entity);
+  }
+
+  private static PostCommentResponseDTO commentToDTO(final Comment entity) {
     return PostCommentResponseDTO.builder()
         .id(entity.getId())
-        .parentId(entity.getParent().getId())
+        .parentId(entity.getParent() != null ? entity.getParent().getId() : null)
         .postId(entity.getPost().getId())
         .content(entity.getContent())
         .writerNickname(entity.getWriter().getNickname())
@@ -27,4 +31,15 @@ public record PostCommentResponseDTO(
         .updatedAt(entity.getUpdatedAt())
         .build();
   }
+
+  private static PostCommentResponseDTO removedCommentToDTO(final Comment entity) {
+    String deleteMessage = "삭제된 댓글입니다";
+    return PostCommentResponseDTO.builder()
+        .id(entity.getId())
+        .parentId(entity.getParent() != null ? entity.getParent().getId() : null)
+        .postId(entity.getPost().getId())
+        .content(deleteMessage)
+        .build();
+  }
+
 }
