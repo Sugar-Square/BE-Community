@@ -2,8 +2,8 @@ package org.sugar_square.community_service.service;
 
 import java.util.List;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +27,16 @@ public class PostCommentServiceTest {
   @Autowired
   private PostCommentService postCommentService;
 
-  private static TestData testData;
+  private TestData testData;
 
-  @BeforeAll
-  static void setup(@Autowired TestDataInitializer initializer) {
+  @BeforeEach
+  void setup(@Autowired TestDataInitializer initializer) {
     initializer.init();
     testData = new TestData(initializer);
   }
 
-  @AfterAll
-  static void cleanup(@Autowired TestDataInitializer initializer) {
+  @AfterEach
+  void cleanup(@Autowired TestDataInitializer initializer) {
     initializer.clear();
   }
 
