@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.sugar_square.community_service.domain.board.Comment;
 import org.sugar_square.community_service.domain.board.Post;
 import org.sugar_square.community_service.domain.member.Member;
+import org.sugar_square.community_service.dto.board.PostCommentModifyDTO;
 import org.sugar_square.community_service.dto.board.PostCommentRegisterDTO;
 import org.sugar_square.community_service.exception.EntityNotFoundException;
 import org.sugar_square.community_service.repository.board.CommentRepository;
@@ -36,6 +37,12 @@ public class PostCommentService {
         .build();
     Comment result = commentRepository.save(registered);
     return result.getId();
+  }
+
+  @Transactional
+  public void modify(final Long commentId, final PostCommentModifyDTO modifyDTO) {
+    Comment foundComment = findOneById(commentId);
+    foundComment.update(modifyDTO.content());
   }
 
   public Comment findOneById(final Long commentId) {

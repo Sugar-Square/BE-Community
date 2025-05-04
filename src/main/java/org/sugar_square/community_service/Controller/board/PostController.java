@@ -32,22 +32,22 @@ public class PostController {
   }
 
   @GetMapping("/{postId}")
-  public ResponseEntity<PostResponseDTO> readPost(@PathVariable Long postId) {
+  public ResponseEntity<PostResponseDTO> readPost(@PathVariable final Long postId) {
     PostResponseDTO responseDto = postService.readOneById(postId);
     return ResponseEntity.status(HttpStatus.OK).body(responseDto);
   }
 
   @PutMapping("/{postId}")
   public ResponseEntity<String> modifyPost(
-      @PathVariable Long postId,
-      @RequestBody @Valid PostModifyDTO modifyDTO
+      @PathVariable final Long postId,
+      @RequestBody @Valid final PostModifyDTO modifyDTO
   ) {
     postService.modify(postId, modifyDTO);
     return ResponseEntity.status(HttpStatus.OK).body("post modified successfully");
   }
 
   @DeleteMapping("/{postId}")
-  public ResponseEntity<String> removePost(@PathVariable Long postId) {
+  public ResponseEntity<String> removePost(@PathVariable final Long postId) {
     postService.softDelete(postId);
     return ResponseEntity.status(HttpStatus.OK).body("post removed successfully");
   }
