@@ -53,7 +53,7 @@ public class PostService {
   }
 
   @Transactional(readOnly = false)
-  public void softDelete(final Long postId) {
+  public void remove(final Long postId) {
     Post foundPost = findOneById(postId);
     postRepository.softDeleteById(foundPost.getId());
   }

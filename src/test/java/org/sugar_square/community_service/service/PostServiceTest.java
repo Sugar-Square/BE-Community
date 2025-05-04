@@ -83,12 +83,12 @@ public class PostServiceTest {
 
   @Test
   @DisplayName("게시물 삭제 테스트")
-  void softDeleteTest() {
+  void removeTest() {
     //given
     List<Post> posts = testData.getPosts();
     Long postId = posts.getFirst().getId();
     //when
-    postService.softDelete(postId);
+    postService.remove(postId);
     //then
     Optional<Post> found = postRepository.findById(postId);
     Assertions.assertThat(found).isEmpty();

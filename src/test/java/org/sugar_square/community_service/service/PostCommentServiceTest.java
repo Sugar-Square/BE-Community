@@ -17,6 +17,7 @@ import org.sugar_square.community_service.domain.board.Post;
 import org.sugar_square.community_service.domain.member.Member;
 import org.sugar_square.community_service.dto.board.PostCommentModifyDTO;
 import org.sugar_square.community_service.dto.board.PostCommentRegisterDTO;
+import org.sugar_square.community_service.repository.board.CommentRepository;
 import org.sugar_square.community_service.service.board.PostCommentService;
 
 @SpringBootTest
@@ -27,7 +28,11 @@ public class PostCommentServiceTest {
   @Autowired
   private PostCommentService postCommentService;
 
+  @Autowired
+  private CommentRepository commentRepository;
+
   private TestData testData;
+
 
   @BeforeEach
   void setup(@Autowired TestDataInitializer initializer) {
@@ -68,5 +73,25 @@ public class PostCommentServiceTest {
     //then
     Comment modified = postCommentService.findOneById(comment.getId());
     Assertions.assertThat(modified.getContent()).isNotEqualTo(content); // 기존 content 와 다르면 PASS
+  }
+
+  /*
+  * comment 는 soft delete 된 엔티티도 조회함
+  * 조회한 comment 중 deletedAt != null 인 댓글은 "삭제된 댓글입니다" 처리
+  * */
+  @Test
+  @DisplayName("댓글 삭제 테스트")
+  void removeTest(){
+    //given
+    List<Comment> comments = testData.getComments();
+    Long removeId = comments.getFirst().getId();
+    Long compareId = comments.getLast().getId();
+    //when
+    postCommentService.remove(removeId);
+    //then
+    Comment removed = postCommentService.findOneById(removeId);
+    Comment compare = postCommentService.findOneById(compareId);
+    Assertions.assertThat(removed.isDeleted()).isTrue(); // is deleted
+    Assertions.assertThat(compare.isDeleted()).isFalse(); // is not deleted
   }
 }

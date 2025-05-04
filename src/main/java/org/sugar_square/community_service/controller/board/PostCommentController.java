@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,11 +33,16 @@ public class PostCommentController {
 
   @PutMapping("/{commentId}")
   public ResponseEntity<String> modifyComment(
-      @PathVariable final Long postId,
       @PathVariable final Long commentId,
       @RequestBody @Valid final PostCommentModifyDTO modifyDTO
   ) {
     postCommentService.modify(commentId, modifyDTO);
     return ResponseEntity.status(HttpStatus.OK).body("comment modified successfully");
+  }
+
+  @DeleteMapping("/{commentId}")
+  public ResponseEntity<String> removeComment(@PathVariable final Long commentId) {
+    postCommentService.remove(commentId);
+    return ResponseEntity.status(HttpStatus.OK).body("comment removed successfully");
   }
 }
