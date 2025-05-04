@@ -21,6 +21,8 @@ public class PostCommentService {
   private final MemberService memberService;
   private final CommentRepository commentRepository;
 
+  // TODO: deletedAt != null -> 조회 시 "삭제된 댓글입니다"로 처리
+
   @Transactional
   public Long register(final Long postId, final PostCommentRegisterDTO registerDTO) {
     Post foundPost = postService.findOneById(postId);
@@ -43,6 +45,12 @@ public class PostCommentService {
   public void modify(final Long commentId, final PostCommentModifyDTO modifyDTO) {
     Comment foundComment = findOneById(commentId);
     foundComment.update(modifyDTO.content());
+  }
+
+  @Transactional
+  public void remove(final Long commentId) {
+    Comment foundComment = findOneById(commentId);
+    commentRepository.softDeleteById(foundComment.getId());
   }
 
   public Comment findOneById(final Long commentId) {

@@ -76,4 +76,8 @@ public class Comment extends BaseEntity {
   public void update(final String content) {
     this.content = content;
   }
+
+  public boolean isDeleted() {
+    return this.getDeletedAt() != null;
+  }
 }
