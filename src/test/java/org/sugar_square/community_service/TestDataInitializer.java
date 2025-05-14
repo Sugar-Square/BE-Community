@@ -30,6 +30,8 @@ public class TestDataInitializer {
   public static final String POST_TITLE = "test_title";
   public static final String POST_CONTENT = "test_content";
   public static final String COMMENT_CONTENT = "test_content";
+  public static final int DUMMY_COUNT = 10;
+  public static final int DUMMY_COMMENT_COUNT = 5;
 
   @PersistenceContext
   private EntityManager em;
@@ -68,7 +70,6 @@ public class TestDataInitializer {
   }
 
   public void init() {
-    final int DUMMY_COUNT = 10;
     clearLists();
     for (int i = 0; i < DUMMY_COUNT; i++) {
       Member savedMember = memberRepository.save(
@@ -98,15 +99,17 @@ public class TestDataInitializer {
       );
       posts.add(savedPost);
 
-      Comment savedComment = commentRepository.save(
-          Comment.builder()
-              .content(COMMENT_CONTENT)
-              .writer(savedMember)
-              .post(savedPost)
-              .parent(null)
-              .build()
-      );
-      comments.add(savedComment);
+      for (int j = 0; j < DUMMY_COMMENT_COUNT; j++) {
+        Comment savedComment = commentRepository.save(
+            Comment.builder()
+                .content(COMMENT_CONTENT)
+                .writer(savedMember)
+                .post(savedPost)
+                .parent(null)
+                .build()
+        );
+        comments.add(savedComment);
+      }
     }
   }
 

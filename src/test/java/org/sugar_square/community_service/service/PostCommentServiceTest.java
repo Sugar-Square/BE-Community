@@ -1,7 +1,9 @@
 package org.sugar_square.community_service.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Iterator;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +19,7 @@ import org.sugar_square.community_service.domain.board.Post;
 import org.sugar_square.community_service.domain.member.Member;
 import org.sugar_square.community_service.dto.board.PostCommentModifyDTO;
 import org.sugar_square.community_service.dto.board.PostCommentRegisterDTO;
+import org.sugar_square.community_service.dto.board.PostCommentResponseDTO;
 import org.sugar_square.community_service.repository.board.CommentRepository;
 import org.sugar_square.community_service.service.board.PostCommentService;
 
@@ -57,7 +60,7 @@ public class PostCommentServiceTest {
     //when
     Long registeredId = postCommentService.register(post.getId(), registerDTO);
     //then
-    Assertions.assertThat(registeredId).isNotNull();
+    assertThat(registeredId).isNotNull();
   }
 
   @Test
@@ -72,16 +75,16 @@ public class PostCommentServiceTest {
     postCommentService.modify(comment.getId(), modifyDTO);
     //then
     Comment modified = postCommentService.findOneById(comment.getId());
-    Assertions.assertThat(modified.getContent()).isNotEqualTo(content); // 기존 content 와 다르면 PASS
+    assertThat(modified.getContent()).isNotEqualTo(content); // 기존 content 와 다르면 PASS
   }
 
   /*
-  * comment 는 soft delete 된 엔티티도 조회함
-  * 조회한 comment 중 deletedAt != null 인 댓글은 "삭제된 댓글입니다" 처리
-  * */
+   * comment 는 soft delete 된 엔티티도 조회함
+   * 조회한 comment 중 deletedAt != null 인 댓글은 "삭제된 댓글입니다" 처리
+   * */
   @Test
   @DisplayName("댓글 삭제 테스트")
-  void removeTest(){
+  void removeTest() {
     //given
     List<Comment> comments = testData.getComments();
     Long removeId = comments.getFirst().getId();
@@ -91,7 +94,31 @@ public class PostCommentServiceTest {
     //then
     Comment removed = postCommentService.findOneById(removeId);
     Comment compare = postCommentService.findOneById(compareId);
-    Assertions.assertThat(removed.isDeleted()).isTrue(); // is deleted
-    Assertions.assertThat(compare.isDeleted()).isFalse(); // is not deleted
+    assertThat(removed.isDeleted()).isTrue(); // is deleted
+    assertThat(compare.isDeleted()).isFalse(); // is not deleted
+  }
+
+  @Test
+  @DisplayName("게시글의 모든 댓글 조회 테스트")
+  void readAllByPostIdTest() {
+    //then
+    Long postId = testData.getPosts().getFirst().getId();
+    List<Comment> comments = testData.getComments();
+    Iterator<Comment> iterator = comments.iterator();
+    //given
+    List<PostCommentResponseDTO> dtos = postCommentService.readAllByPostId(postId);
+    //then
+    dtos.forEach(dto -> {
+      Comment comment = iterator.next();
+      assertThat(dto)
+          .extracting("id", "parentId", "postId", "content", "writerNickname")
+          .containsExactly(
+              comment.getId(),
+              comment.getParent() == null ? null : comment.getParent().getId(),
+              comment.getPost().getId(),
+              comment.getContent(),
+              comment.getWriter().getNickname()
+          );
+    });
   }
 }
