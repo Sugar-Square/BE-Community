@@ -1,11 +1,11 @@
 package org.sugar_square.community_service.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sugar_square.community_service.TestDataInitializer.POST_CONTENT;
 import static org.sugar_square.community_service.TestDataInitializer.POST_TITLE;
 
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -60,7 +60,7 @@ public class PostServiceTest {
     //when
     Long registeredId = postService.register(registerDTO);
     //then
-    Assertions.assertThat(registeredId).isNotNull();
+    assertThat(registeredId).isNotNull();
   }
 
   @Test
@@ -76,7 +76,7 @@ public class PostServiceTest {
     postService.modify(postId, modifyDTO);
     //then
     Post modifiedPost = postService.findOneById(postId);
-    Assertions.assertThat(modifiedPost)
+    assertThat(modifiedPost)
         .extracting("title", "content", "category.id") // 객체 속성 추출
         .containsExactly("modified title", "modified content", categoryId); // 모든 값, 순서 검증
   }
@@ -91,6 +91,6 @@ public class PostServiceTest {
     postService.remove(postId);
     //then
     Optional<Post> found = postRepository.findById(postId);
-    Assertions.assertThat(found).isEmpty();
+    assertThat(found).isEmpty();
   }
 }
