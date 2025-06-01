@@ -7,4 +7,6 @@ import org.sugar_square.community_service.repository.BaseRepository;
 @Repository
 public interface BookmarkRepository extends BaseRepository<Bookmark, Long> {
 
+  boolean existsByBookmarkPK_MemberIdAndBookmarkPK_PostId(Long bookmarkPKMemberId,
+      Long bookmarkPKPostId);
 }

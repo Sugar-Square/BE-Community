@@ -24,6 +24,8 @@ public class PostController {
 
   private final PostService postService;
 
+  // TODO: 전체 게시글 조회 메서드, 페이징 처리
+
   @PostMapping
   public ResponseEntity<String> writePost(@RequestBody @Valid final PostRegisterDTO registerDTO) {
     Long savedPostId = postService.register(registerDTO);
