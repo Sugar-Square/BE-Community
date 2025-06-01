@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.sugar_square.community_service.service.board.BookmarkService;
-import org.sugar_square.community_service.service.board.BookmarkService.BookmarkResult;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,4 +31,10 @@ public class BookmarkController {
   }
 
   // TODO: 북마크 삭제
+
+  public record BookmarkResult(
+      Long memberId, Long postId
+  ) {
+
+  }
 }

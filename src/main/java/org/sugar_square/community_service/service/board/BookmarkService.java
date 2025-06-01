@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.sugar_square.community_service.controller.board.BookmarkController.BookmarkResult;
 import org.sugar_square.community_service.domain.board.Bookmark;
 import org.sugar_square.community_service.domain.board.BookmarkPK;
 import org.sugar_square.community_service.domain.board.Post;
@@ -30,11 +31,5 @@ public class BookmarkService {
     Bookmark bookmarked = bookmarkRepository.save(new Bookmark(new BookmarkPK(post, member)));
     BookmarkPK pk = bookmarked.getBookmarkPK();
     return new BookmarkResult(pk.getMember().getId(), pk.getPost().getId());
-  }
-
-  public record BookmarkResult(
-      Long memberId, Long postId
-  ) {
-
   }
 }
