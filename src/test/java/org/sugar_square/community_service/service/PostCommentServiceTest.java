@@ -35,8 +35,7 @@ public class PostCommentServiceTest {
   private CommentRepository commentRepository;
 
   private TestData testData;
-
-
+  
   @BeforeEach
   void setup(@Autowired TestDataInitializer initializer) {
     initializer.init();
