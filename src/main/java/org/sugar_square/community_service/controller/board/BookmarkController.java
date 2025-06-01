@@ -1,9 +1,9 @@
 package org.sugar_square.community_service.controller.board;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +19,11 @@ public class BookmarkController {
 
   // TODO: 전체 북마크 조회 - 5개씩 페이징 처리
 
-  @PostMapping("/{memberId}/{postId}")
+  @PostMapping("/member/{memberId}/post/{postId}")
   public ResponseEntity<String> registerBookmark(
-      @PathVariable @Valid final Long memberId,
-      @PathVariable @Valid final Long postId) {
+      @PathVariable final Long memberId,
+      @PathVariable final Long postId
+  ) {
     BookmarkResult result = bookmarkService.register(memberId, postId);
     return ResponseEntity
         .status(HttpStatus.CREATED)
@@ -30,7 +31,16 @@ public class BookmarkController {
             + " successfully");
   }
 
-  // TODO: 북마크 삭제
+  @DeleteMapping("/member/{memberId}/post/{postId}")
+  public ResponseEntity<String> removeBookmark(
+      @PathVariable final Long memberId,
+      @PathVariable final Long postId
+  ) {
+    bookmarkService.remove(memberId, postId);
+    return ResponseEntity
+        .status(HttpStatus.OK)
+        .body("Bookmark removed successfully.");
+  }
 
   public record BookmarkResult(
       Long memberId, Long postId
