@@ -2,6 +2,7 @@ package org.sugar_square.community_service.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +10,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import org.sugar_square.community_service.TestData;
@@ -17,6 +20,8 @@ import org.sugar_square.community_service.controller.board.BookmarkController.Bo
 import org.sugar_square.community_service.domain.board.BookmarkPK;
 import org.sugar_square.community_service.domain.board.Post;
 import org.sugar_square.community_service.domain.member.Member;
+import org.sugar_square.community_service.dto.PageResponseDTO;
+import org.sugar_square.community_service.dto.board.BookmarkResponseDTO;
 import org.sugar_square.community_service.repository.board.BookmarkRepository;
 import org.sugar_square.community_service.service.board.BookmarkService;
 
@@ -42,6 +47,39 @@ public class BookmarkServiceTest {
   @AfterEach
   void cleanup(@Autowired TestDataInitializer initializer) {
     initializer.clear();
+  }
+
+  @Test
+  @DisplayName("북마크 페이징 조회 테스트")
+  void readBookmarkListTest() {
+    //given
+    Member member = testData.getMembers().getFirst();
+    List<Post> posts = testData.getPosts();
+    List<BookmarkResponseDTO> bookmarkDTOList = new ArrayList<>();
+    for (Post post : posts) {
+      bookmarkService.register(member.getId(), post.getId());
+      bookmarkDTOList.add(BookmarkResponseDTO.fromEntity(post));
+    }
+    //when
+    Pageable pageable1 = PageRequest.of(0, 5);
+    Pageable pageable2 = PageRequest.of(1, 5);
+    PageResponseDTO<BookmarkResponseDTO> pageDTO1 =
+        bookmarkService.findAllByMemberId(member.getId(), pageable1);
+    PageResponseDTO<BookmarkResponseDTO> pageDTO2 =
+        bookmarkService.findAllByMemberId(member.getId(), pageable2);
+    //then
+    assertThat(pageDTO1)
+        .isNotNull()
+        .extracting("dtoList")
+        .asList()
+        .containsExactly(bookmarkDTOList.get(0), bookmarkDTOList.get(1), bookmarkDTOList.get(2),
+            bookmarkDTOList.get(3), bookmarkDTOList.get(4));
+    assertThat(pageDTO2)
+        .isNotNull()
+        .extracting("dtoList")
+        .asList()
+        .containsExactly(bookmarkDTOList.get(5), bookmarkDTOList.get(6), bookmarkDTOList.get(7),
+            bookmarkDTOList.get(8), bookmarkDTOList.get(9));
   }
 
   @Test
