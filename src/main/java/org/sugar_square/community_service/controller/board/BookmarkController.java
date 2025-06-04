@@ -24,9 +24,8 @@ public class BookmarkController {
 
   private final BookmarkService bookmarkService;
 
-  // TODO: 전체 북마크 조회 - 5개씩 페이징 처리
   @GetMapping("/member/{memberId}")
-  public ResponseEntity<PageResponseDTO<BookmarkResponseDTO>> getBookmarkList(
+  public ResponseEntity<PageResponseDTO<BookmarkResponseDTO>> readBookmarkList(
       @PathVariable("memberId") final Long memberId,
       @PageableDefault(page = 0, size = 5, sort = "createdAt", direction = DESC) Pageable pageable
   ) {
