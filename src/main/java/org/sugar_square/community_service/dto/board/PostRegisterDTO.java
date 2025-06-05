@@ -6,7 +6,7 @@ import org.sugar_square.community_service.domain.board.Post;
 import org.sugar_square.community_service.domain.member.Member;
 import org.sugar_square.community_service.dto.RequestDTO;
 
-public record PostRequestDTO(
+public record PostRegisterDTO(
     String title,
     String content,
     @NonNull Long memberId,

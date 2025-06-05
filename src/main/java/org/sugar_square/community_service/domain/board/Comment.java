@@ -18,13 +18,14 @@ import lombok.NoArgsConstructor;
 import org.sugar_square.community_service.domain.BaseEntity;
 import org.sugar_square.community_service.domain.member.Member;
 
+/*
+ * TODO: COMMENT 는 @SQLRestriction("deleted_at IS NULL) 처리하지 않는다
+ *  삭제된 COMMENT 까지 조회해서 "삭제된 댓글입니다" 출력
+ * */
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-/*
-* TODO: COMMENT 는 @SQLRestriction("deleted_at IS NULL) 처리하지 않는다
-*  삭제된 COMMENT 까지 조회해서 "삭제된 댓글입니다" 출력
-* */
 public class Comment extends BaseEntity {
 
   @Id
@@ -71,5 +72,13 @@ public class Comment extends BaseEntity {
       this.children.add(child);
       child.setParent(this);
     }
+  }
+
+  public void update(final String content) {
+    this.content = content;
+  }
+
+  public boolean isDeleted() {
+    return this.getDeletedAt() != null;
   }
 }
