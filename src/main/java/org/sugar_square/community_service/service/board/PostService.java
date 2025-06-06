@@ -1,13 +1,19 @@
 package org.sugar_square.community_service.service.board;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.sugar_square.community_service.controller.board.PostController.SearchCondition;
 import org.sugar_square.community_service.domain.board.Category;
 import org.sugar_square.community_service.domain.board.Post;
 import org.sugar_square.community_service.domain.member.Member;
+import org.sugar_square.community_service.dto.PageResponseDTO;
 import org.sugar_square.community_service.dto.board.PostModifyDTO;
+import org.sugar_square.community_service.dto.board.PostPreviewDTO;
 import org.sugar_square.community_service.dto.board.PostRegisterDTO;
 import org.sugar_square.community_service.dto.board.PostResponseDTO;
 import org.sugar_square.community_service.exception.EntityNotFoundException;
@@ -23,6 +29,18 @@ public class PostService {
   private final PostRepository postRepository;
   private final CategoryService categoryService;
   private final MemberService memberService;
+
+  public PageResponseDTO<PostPreviewDTO> readPostList(
+      final Pageable pageable, final Long categoryId, final SearchCondition condition
+  ) {
+    Page<Post> pages = postRepository.searchAll(categoryId, condition, pageable);
+    List<PostPreviewDTO> dtoList = pages
+        .getContent()
+        .stream()
+        .map(PostPreviewDTO::fromEntity)
+        .toList();
+    return PageResponseDTO.of(pageable, dtoList, (int) pages.getTotalElements());
+  }
 
   @Transactional(readOnly = false)
   public Long register(final PostRegisterDTO registerDTO) {
