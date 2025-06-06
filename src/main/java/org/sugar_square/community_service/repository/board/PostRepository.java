@@ -5,6 +5,6 @@ import org.sugar_square.community_service.domain.board.Post;
 import org.sugar_square.community_service.repository.BaseRepository;
 
 @Repository
-public interface PostRepository extends BaseRepository<Post, Long> {
+public interface PostRepository extends BaseRepository<Post, Long>, PostSearch {
 
 }
