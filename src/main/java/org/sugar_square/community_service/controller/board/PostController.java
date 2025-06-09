@@ -3,7 +3,8 @@ package org.sugar_square.community_service.controller.board;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import jakarta.validation.Valid;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -24,6 +25,7 @@ import org.sugar_square.community_service.dto.board.PostModifyDTO;
 import org.sugar_square.community_service.dto.board.PostPreviewDTO;
 import org.sugar_square.community_service.dto.board.PostRegisterDTO;
 import org.sugar_square.community_service.dto.board.PostResponseDTO;
+import org.sugar_square.community_service.enums.PostSearchType;
 import org.sugar_square.community_service.service.board.PostService;
 
 @RestController
@@ -41,8 +43,8 @@ public class PostController {
       @PathVariable final Long categoryId,
       @RequestParam(defaultValue = "") final String searchType, // 검색 타입 (제목, 내용, 작성자, 제목+내용 등)
       @RequestParam(defaultValue = "") final String keyword,
-      @RequestParam(required = false) @DateTimeFormat(pattern = "yy-MM-dd") final LocalDateTime startDate,
-      @RequestParam(required = false) @DateTimeFormat(pattern = "yy-MM-dd") final LocalDateTime endDate
+      @RequestParam(required = false) @DateTimeFormat(pattern = "yy-MM-dd") final Instant startDate,
+      @RequestParam(required = false) @DateTimeFormat(pattern = "yy-MM-dd") final Instant endDate
   ) {
     SearchCondition condition = new SearchCondition(keyword, searchType, startDate, endDate);
     PageResponseDTO<PostPreviewDTO> result = postService.readPostList(pageable, categoryId,
@@ -78,12 +80,19 @@ public class PostController {
     return ResponseEntity.status(HttpStatus.OK).body("post removed successfully");
   }
 
-  public record SearchCondition(
-      String searchType,
-      String keyword,
-      @DateTimeFormat(pattern = "yy-MM-dd") LocalDateTime startDate,
-      @DateTimeFormat(pattern = "yy-MM-dd") LocalDateTime endDate
-  ) {
+  @Getter
+  public static class SearchCondition {
 
+    private final PostSearchType searchType;
+    private final String keyword;
+    private final @DateTimeFormat(pattern = "yy-MM-dd") Instant startDate;
+    private final @DateTimeFormat(pattern = "yy-MM-dd") Instant endDate;
+
+    public SearchCondition(String searchType, String keyword, Instant startDate, Instant endDate) {
+      this.searchType = PostSearchType.fromString(searchType);
+      this.keyword = keyword;
+      this.startDate = startDate;
+      this.endDate = endDate;
+    }
   }
 }
