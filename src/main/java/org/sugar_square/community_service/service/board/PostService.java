@@ -33,7 +33,8 @@ public class PostService {
   public PageResponseDTO<PostPreviewDTO> readPostList(
       final Pageable pageable, final Long categoryId, final SearchCondition condition
   ) {
-    Page<Post> pages = postRepository.searchAll(categoryId, condition, pageable);
+    Category category = categoryService.findOneById(categoryId);
+    Page<Post> pages = postRepository.searchAll(category, condition, pageable);
     List<PostPreviewDTO> dtoList = pages
         .getContent()
         .stream()
