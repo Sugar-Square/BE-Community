@@ -69,17 +69,13 @@ public class BookmarkServiceTest {
         bookmarkService.findAllByMemberId(member.getId(), pageable2);
     //then
     assertThat(pageDTO1)
-        .isNotNull()
         .extracting("dtoList")
-        .asList()
-        .containsExactly(bookmarkDTOList.get(0), bookmarkDTOList.get(1), bookmarkDTOList.get(2),
-            bookmarkDTOList.get(3), bookmarkDTOList.get(4));
+        .usingRecursiveComparison()
+        .isEqualTo(bookmarkDTOList.subList(0, 5));
     assertThat(pageDTO2)
-        .isNotNull()
         .extracting("dtoList")
-        .asList()
-        .containsExactly(bookmarkDTOList.get(5), bookmarkDTOList.get(6), bookmarkDTOList.get(7),
-            bookmarkDTOList.get(8), bookmarkDTOList.get(9));
+        .usingRecursiveComparison()
+        .isEqualTo(bookmarkDTOList.subList(5, 10));
   }
 
   @Test

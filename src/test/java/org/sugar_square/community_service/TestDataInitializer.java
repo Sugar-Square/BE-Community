@@ -31,7 +31,8 @@ public class TestDataInitializer {
   public static final String POST_CONTENT = "test_content";
   public static final String COMMENT_CONTENT = "test_content";
   public static final int DUMMY_COUNT = 10;
-  public static final int DUMMY_COMMENT_COUNT = 5;
+//  public static final int DUMMY_POST_COUNT = 5;
+//  public static final int DUMMY_COMMENT_COUNT = 5;
 
   @PersistenceContext
   private EntityManager em;
@@ -72,45 +73,64 @@ public class TestDataInitializer {
   public void init() {
     clearLists();
     for (int i = 0; i < DUMMY_COUNT; i++) {
-      Member savedMember = memberRepository.save(
-          Member.builder()
-              .username(MEMBER_USERNAME + i)
-              .password(MEMBER_PASSWORD + i)
-              .nickname(MEMBER_NICKNAME + i)
-              .build()
-      );
-      members.add(savedMember);
-
-      Category savedCategory = categoryRepository.save(
-          Category.builder()
-              .name(CATEGORY_NAME + i)
-              .description(CATEGORY_DESCRIPTION + i)
-              .build()
-      );
-      categories.add(savedCategory);
-
-      Post savedPost = postRepository.save(
-          Post.builder()
-              .title(POST_TITLE + i)
-              .content(POST_CONTENT + i)
-              .writer(savedMember)
-              .category(savedCategory)
-              .build()
-      );
-      posts.add(savedPost);
-
-      for (int j = 0; j < DUMMY_COMMENT_COUNT; j++) {
-        Comment savedComment = commentRepository.save(
-            Comment.builder()
-                .content(COMMENT_CONTENT)
-                .writer(savedMember)
-                .post(savedPost)
-                .parent(null)
-                .build()
-        );
-        comments.add(savedComment);
+      Member savedMember = createMember(i);
+      Category savedCategory = createCategory(i);
+      for (int j = 0; j < DUMMY_COUNT; j++) {
+        Post savedPost = createPost(j, savedMember, savedCategory);
+        for (int k = 0; k < DUMMY_COUNT; k++) {
+          Comment savedComment = createComment(k, savedMember, savedPost);
+        }
       }
     }
+  }
+
+  private Comment createComment(final int k, final Member savedMember, final Post savedPost) {
+    Comment savedComment = commentRepository.save(
+        Comment.builder()
+            .content(COMMENT_CONTENT + k)
+            .writer(savedMember)
+            .post(savedPost)
+            .parent(null)
+            .build()
+    );
+    comments.add(savedComment);
+    return savedComment;
+  }
+
+  private Post createPost(final int j, final Member savedMember, final Category savedCategory) {
+    Post savedPost = postRepository.save(
+        Post.builder()
+            .title(POST_TITLE + j)
+            .content(POST_CONTENT + j)
+            .writer(savedMember)
+            .category(savedCategory)
+            .build()
+    );
+    posts.add(savedPost);
+    return savedPost;
+  }
+
+  private Category createCategory(final int i) {
+    Category savedCategory = categoryRepository.save(
+        Category.builder()
+            .name(CATEGORY_NAME + i)
+            .description(CATEGORY_DESCRIPTION + i)
+            .build()
+    );
+    categories.add(savedCategory);
+    return savedCategory;
+  }
+
+  private Member createMember(final int i) {
+    Member savedMember = memberRepository.save(
+        Member.builder()
+            .username(MEMBER_USERNAME + i)
+            .password(MEMBER_PASSWORD + i)
+            .nickname(MEMBER_NICKNAME + i)
+            .build()
+    );
+    members.add(savedMember);
+    return savedMember;
   }
 
   @Transactional
