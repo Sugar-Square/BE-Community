@@ -1,17 +1,24 @@
 package org.sugar_square.community_service.repository.board;
 
+import static com.querydsl.core.types.Order.ASC;
+import static com.querydsl.core.types.Order.DESC;
 import static org.sugar_square.community_service.enums.PostSearchType.INVALID;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.util.StringUtils;
 import org.sugar_square.community_service.controller.board.PostController.SearchCondition;
@@ -47,7 +54,7 @@ public class PostSearchImpl implements PostSearch {
     // page content
     List<Post> result = queryFactory.selectFrom(post)
         .where(combinedBuilder)
-        .orderBy(post.createdAt.desc())
+        .orderBy(getOrderSpecifier(post, pageable.getSort()))
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetch();
@@ -62,6 +69,26 @@ public class PostSearchImpl implements PostSearch {
       Long count = countQuery.fetchOne();
       return Objects.isNull(count) ? 0L : count;
     });
+  }
+
+  private OrderSpecifier<?>[] getOrderSpecifier(QPost post, Sort sort) {
+    Iterator<Order> orders = sort.iterator();
+    List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
+    while (orders.hasNext()) {
+      Order order = orders.next();
+      OrderSpecifier<?> orderspecifier = switch (order.getProperty()) {
+        case "createdAt" -> new OrderSpecifier<>(order.isAscending() ? ASC : DESC, post.createdAt);
+        case "title" -> new OrderSpecifier<>(order.isAscending() ? ASC : DESC, post.title);
+        case "writer" ->
+            new OrderSpecifier<>(order.isAscending() ? ASC : DESC, post.writer.nickname);
+        case "id" -> new OrderSpecifier<>(order.isAscending() ? ASC : DESC, post.id);
+        default -> throw new IllegalArgumentException(
+            "Unexpected Post order property: " + order.getProperty()
+        );
+      };
+      orderSpecifiers.add(orderspecifier);
+    }
+    return orderSpecifiers.toArray(OrderSpecifier[]::new);
   }
 
   private BooleanBuilder combineBuilders(BooleanBuilder... builders) {
