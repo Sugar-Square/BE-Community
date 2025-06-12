@@ -12,6 +12,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -94,9 +95,9 @@ public class PostController {
       this.searchType = PostSearchType.fromString(searchType);
       this.keyword = keyword;
       this.startDate =
-          startDate == null || startDate.isEmpty() ? null : Instant.parse(startDate + "T00:00:00Z");
+          StringUtils.hasText(startDate) ? Instant.parse(startDate + "T00:00:00Z") : null;
       this.endDate =
-          endDate == null || endDate.isEmpty() ? null : Instant.parse(endDate + "T00:00:00Z");
+          StringUtils.hasText(endDate) ? Instant.parse(endDate + "T00:00:00Z") : null;
     }
   }
 }
