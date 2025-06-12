@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import java.time.Instant;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -38,16 +39,16 @@ public class PostController {
   // TODO: 카테고리 별 전체 게시글 조회 메서드, 페이징 처리
   // TODO: 검색 구현 (제목, 내용, 작성자, 제목+내용, 날짜 등)
   @GetMapping("/category/{categoryId}")
-  public ResponseEntity<PageResponseDTO<PostPreviewDTO>> readPostList(
+  public ResponseEntity<PageResponseDTO<PostPreviewDTO>> searchCategoryPost(
       @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = DESC) final Pageable pageable,
       @PathVariable final Long categoryId,
       @RequestParam(defaultValue = "") final String searchType, // 검색 타입 (제목, 내용, 작성자, 제목+내용 등)
       @RequestParam(defaultValue = "") final String keyword,
-      @RequestParam(required = false) @DateTimeFormat(pattern = "yy-MM-dd") final Instant startDate,
-      @RequestParam(required = false) @DateTimeFormat(pattern = "yy-MM-dd") final Instant endDate
+      @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") final String startDate,
+      @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") final String endDate
   ) {
-    SearchCondition condition = new SearchCondition(keyword, searchType, startDate, endDate);
-    PageResponseDTO<PostPreviewDTO> result = postService.readPostList(pageable, categoryId,
+    SearchCondition condition = new SearchCondition(searchType, keyword, startDate, endDate);
+    PageResponseDTO<PostPreviewDTO> result = postService.searchInCategoryPost(pageable, categoryId,
         condition);
     return ResponseEntity.ok(result);
   }
@@ -81,18 +82,21 @@ public class PostController {
   }
 
   @Getter
+  @ToString
   public static class SearchCondition {
 
     private final PostSearchType searchType;
     private final String keyword;
-    private final @DateTimeFormat(pattern = "yy-MM-dd") Instant startDate;
-    private final @DateTimeFormat(pattern = "yy-MM-dd") Instant endDate;
+    private final Instant startDate;
+    private final Instant endDate;
 
-    public SearchCondition(String searchType, String keyword, Instant startDate, Instant endDate) {
+    public SearchCondition(String searchType, String keyword, String startDate, String endDate) {
       this.searchType = PostSearchType.fromString(searchType);
       this.keyword = keyword;
-      this.startDate = startDate;
-      this.endDate = endDate;
+      this.startDate =
+          startDate == null || startDate.isEmpty() ? null : Instant.parse(startDate + "T00:00:00Z");
+      this.endDate =
+          endDate == null || endDate.isEmpty() ? null : Instant.parse(endDate + "T00:00:00Z");
     }
   }
 }

@@ -30,7 +30,7 @@ public class PostService {
   private final CategoryService categoryService;
   private final MemberService memberService;
 
-  public PageResponseDTO<PostPreviewDTO> readPostList(
+  public PageResponseDTO<PostPreviewDTO> searchInCategoryPost(
       final Pageable pageable, final Long categoryId, final SearchCondition condition
   ) {
     Category category = categoryService.findOneById(categoryId);
