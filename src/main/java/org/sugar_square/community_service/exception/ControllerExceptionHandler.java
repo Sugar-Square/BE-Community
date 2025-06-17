@@ -1,6 +1,10 @@
 package org.sugar_square.community_service.exception;
 
+import java.util.Optional;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +17,18 @@ public class ControllerExceptionHandler {
   @ExceptionHandler(EntityNotFoundException.class)
   public ErrorResponse handleEntityNotFoundException(EntityNotFoundException e) {
     return new ErrorResponse("entity not found", e.getMessage());
+  }
+
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ErrorResponse handleMethodArgNotValidException(MethodArgumentNotValidException e) {
+    String message = Optional.ofNullable(e.getBindingResult().getFieldError())
+        .map(DefaultMessageSourceResolvable::getDefaultMessage)
+        .orElse(null);
+    return new ErrorResponse(
+        "validation error",
+        StringUtils.hasText(message) ? message : "https request method argument validation failed"
+    );
   }
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)
