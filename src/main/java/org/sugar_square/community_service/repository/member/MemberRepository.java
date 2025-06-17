@@ -7,4 +7,7 @@ import org.sugar_square.community_service.repository.BaseRepository;
 @Repository
 public interface MemberRepository extends BaseRepository<Member, Long> {
 
+  boolean existsByUsername(String username);
+
+  boolean existsByNickname(String nickname);
 }
