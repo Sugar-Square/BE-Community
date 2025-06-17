@@ -36,9 +36,7 @@ import org.sugar_square.community_service.service.board.PostService;
 public class PostController {
 
   private final PostService postService;
-
-  // TODO: 카테고리 별 전체 게시글 조회 메서드, 페이징 처리
-  // TODO: 검색 구현 (제목, 내용, 작성자, 제목+내용, 날짜 등)
+  
   @GetMapping("/category/{categoryId}")
   public ResponseEntity<PageResponseDTO<PostPreviewDTO>> searchCategoryPost(
       @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = DESC) final Pageable pageable,
