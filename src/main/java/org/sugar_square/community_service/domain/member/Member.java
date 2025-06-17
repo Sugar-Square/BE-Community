@@ -24,13 +24,13 @@ public class Member extends BaseEntity {
   @Column(name = "member_id", nullable = false, updatable = false)
   private Long id;
 
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   private String username;  // TODO: DTO 에서 한 번 더 null 검증
 
   @Column(nullable = false)
   private String password; // TODO: DTO 에서 한 번 더 null 검증
 
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   private String nickname; // TODO: DTO 에서 한 번 더 null 검증
 
   private String name;
