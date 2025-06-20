@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,5 +27,20 @@ public class MemberController {
     return ResponseEntity.status(HttpStatus.CREATED).body("Signed up successfully");
   }
 
-  // TODO: username, nickname 중복 체크 API 추가
+  @PostMapping("/check-duplication")
+  public ResponseEntity<String> checkDuplication(
+      @RequestBody final DuplicationCheckRequest request
+  ) {
+    if (!StringUtils.hasText(request.username()) || !StringUtils.hasText(request.nickname())) {
+      return ResponseEntity
+          .status(HttpStatus.BAD_REQUEST)
+          .body("username & nickname must not be empty");
+    }
+    memberService.checkDuplication(request.username(), request.nickname());
+    return ResponseEntity.ok("Duplication check passed");
+  }
+
+  public record DuplicationCheckRequest(String username, String nickname) {
+
+  }
 }

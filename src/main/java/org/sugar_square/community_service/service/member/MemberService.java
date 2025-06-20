@@ -17,7 +17,7 @@ public class MemberService {
 
   @Transactional
   public Member register(final SignUpRequestDTO signUpRequestDTO) {
-    validDuplication(signUpRequestDTO);
+    checkDuplication(signUpRequestDTO.username(), signUpRequestDTO.nickname());
     Member newMember = Member.builder()
         .username(signUpRequestDTO.username()) // TODO: username 과 nickname 인덱스 생성 고민
         .password(signUpRequestDTO.password()) // TODO: 비밀번호 암호화 처리 필요
@@ -35,12 +35,12 @@ public class MemberService {
         .orElseThrow(() -> new EntityNotFoundException("member not found: " + memberId));
   }
 
-  private void validDuplication(final SignUpRequestDTO signUpRequestDTO) {
-    if (memberRepository.existsByUsername(signUpRequestDTO.username())) {
-      throw new IllegalArgumentException("SIGN UP FAILED: username already exists");
+  public void checkDuplication(final String username, final String nickname) {
+    if (memberRepository.existsByUsername(username)) {
+      throw new IllegalArgumentException("Duplication check failed: username already exists");
     }
-    if (memberRepository.existsByNickname(signUpRequestDTO.nickname())) {
-      throw new IllegalArgumentException("SIGN UP FAILED: nickname already exists");
+    if (memberRepository.existsByNickname(nickname)) {
+      throw new IllegalArgumentException("Duplication check failed: nickname already exists");
     }
   }
 }
