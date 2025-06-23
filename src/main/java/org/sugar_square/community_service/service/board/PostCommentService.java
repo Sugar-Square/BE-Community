@@ -25,7 +25,7 @@ public class PostCommentService {
   private final MemberService memberService;
   private final CommentRepository commentRepository;
 
-  // TODO: deletedAt != null -> 조회 시 "삭제된 댓글입니다"로 처리
+  // 삭제된 댓글 조회 시 "삭제된 댓글입니다"로 처리
   public List<PostCommentResponseDTO> readAllByPostId(final Long postId) {
     return commentRepository.findByPostIdAndParentIsNullOrderByCreatedAt(postId).stream()
         .flatMap(comment ->
