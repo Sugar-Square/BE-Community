@@ -2,6 +2,8 @@ package org.sugar_square.community_service.domain.member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
 import org.sugar_square.community_service.domain.BaseEntity;
+import org.sugar_square.community_service.enums.RoleEnum;
 
 @Entity
 @Getter
@@ -33,6 +36,10 @@ public class Member extends BaseEntity {
   @Column(nullable = false, unique = true)
   private String nickname; // TODO: DTO 에서 한 번 더 null 검증
 
+  @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
+  private RoleEnum role;
+
   private String name;
 
   private LocalDate birthday;
@@ -40,11 +47,13 @@ public class Member extends BaseEntity {
   private String email;
 
   @Builder
-  private Member(String username, String password, String nickname, String name, LocalDate birthday,
+  private Member(String username, String password, String nickname, RoleEnum role, String name,
+      LocalDate birthday,
       String email) {
     this.username = username;
     this.password = password;
     this.nickname = nickname;
+    this.role = role;
     this.name = name;
     this.birthday = birthday;
     this.email = email;

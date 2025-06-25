@@ -1,5 +1,7 @@
 package org.sugar_square.community_service;
 
+import static org.sugar_square.community_service.enums.RoleEnum.USER;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;
@@ -127,6 +129,7 @@ public class TestDataInitializer {
             .username(MEMBER_USERNAME + i)
             .password(MEMBER_PASSWORD + i)
             .nickname(MEMBER_NICKNAME + i)
+            .role(USER)
             .build()
     );
     members.add(savedMember);

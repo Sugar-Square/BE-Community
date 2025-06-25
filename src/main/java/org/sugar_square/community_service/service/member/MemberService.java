@@ -1,5 +1,7 @@
 package org.sugar_square.community_service.service.member;
 
+import static org.sugar_square.community_service.enums.RoleEnum.USER;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,7 @@ public class MemberService {
         .username(signUpRequestDTO.username()) // TODO: username 과 nickname 인덱스 생성 고민
         .password(signUpRequestDTO.password()) // TODO: 비밀번호 암호화 처리 필요
         .nickname(signUpRequestDTO.nickname())
+        .role(USER)
         .name(signUpRequestDTO.name())
         .birthday(signUpRequestDTO.getLocalDateBirthday())
         .email(signUpRequestDTO.email())
