@@ -1,4 +1,4 @@
-package org.sugar_square.community_service.service;
+package org.sugar_square.community_service.service.board;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,7 +23,6 @@ import org.sugar_square.community_service.domain.member.Member;
 import org.sugar_square.community_service.dto.PageResponseDTO;
 import org.sugar_square.community_service.dto.board.BookmarkResponseDTO;
 import org.sugar_square.community_service.repository.board.BookmarkRepository;
-import org.sugar_square.community_service.service.board.BookmarkService;
 
 @SpringBootTest
 @Transactional

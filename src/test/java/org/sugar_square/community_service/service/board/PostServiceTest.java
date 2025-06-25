@@ -1,4 +1,4 @@
-package org.sugar_square.community_service.service;
+package org.sugar_square.community_service.service.board;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -30,7 +30,7 @@ import org.sugar_square.community_service.dto.board.PostModifyDTO;
 import org.sugar_square.community_service.dto.board.PostPreviewDTO;
 import org.sugar_square.community_service.dto.board.PostRegisterDTO;
 import org.sugar_square.community_service.repository.board.PostRepository;
-import org.sugar_square.community_service.service.board.PostService;
+
 
 @SpringBootTest
 @Transactional

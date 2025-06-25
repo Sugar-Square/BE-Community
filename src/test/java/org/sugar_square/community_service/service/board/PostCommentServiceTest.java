@@ -1,4 +1,4 @@
-package org.sugar_square.community_service.service;
+package org.sugar_square.community_service.service.board;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,7 +21,6 @@ import org.sugar_square.community_service.dto.board.PostCommentModifyDTO;
 import org.sugar_square.community_service.dto.board.PostCommentRegisterDTO;
 import org.sugar_square.community_service.dto.board.PostCommentResponseDTO;
 import org.sugar_square.community_service.repository.board.CommentRepository;
-import org.sugar_square.community_service.service.board.PostCommentService;
 
 @SpringBootTest
 @Transactional
@@ -35,7 +34,7 @@ public class PostCommentServiceTest {
   private CommentRepository commentRepository;
 
   private TestData testData;
-  
+
   @BeforeEach
   void setup(@Autowired TestDataInitializer initializer) {
     initializer.init();
