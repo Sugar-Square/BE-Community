@@ -19,6 +19,10 @@ public class MemberController {
 
   private final MemberService memberService;
 
+
+  /**
+   * 일반 유저용 회원가입 api 관리자는 db query 로 직접 생성
+   */
   @PostMapping("/signup")
   public ResponseEntity<String> signUp(
       @RequestBody @Valid final SignUpRequestDTO signUpRequestDTO
