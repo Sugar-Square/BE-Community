@@ -3,6 +3,7 @@ package org.sugar_square.community_service.service.member;
 import static org.sugar_square.community_service.enums.RoleEnum.USER;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.sugar_square.community_service.domain.member.Member;
@@ -16,15 +17,20 @@ import org.sugar_square.community_service.repository.member.MemberRepository;
 public class MemberService {
 
   private final MemberRepository memberRepository;
+  private final PasswordEncoder passwordEncoder;
 
   @Transactional
   public Member register(final SignUpRequestDTO signUpRequestDTO) {
+    // username, nickname 중복 체크
     checkDuplication(signUpRequestDTO.username(), signUpRequestDTO.nickname());
-    Member newMember = Member.builder()
-        .username(signUpRequestDTO.username()) // TODO: username 과 nickname 인덱스 생성 고민
-        .password(signUpRequestDTO.password()) // TODO: 비밀번호 암호화 처리 필요
+    // password 암호화
+    Member newMember = org.sugar_square.community_service.domain.member.Member.builder()
+        // not null
+        .username(signUpRequestDTO.username())
+        .password(passwordEncoder.encode(signUpRequestDTO.password())) // 비밀번호 암호화
         .nickname(signUpRequestDTO.nickname())
         .role(USER)
+        // nullable
         .name(signUpRequestDTO.name())
         .birthday(signUpRequestDTO.getLocalDateBirthday())
         .email(signUpRequestDTO.email())
