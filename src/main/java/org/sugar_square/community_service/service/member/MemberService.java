@@ -44,6 +44,9 @@ public class MemberService {
         .orElseThrow(() -> new EntityNotFoundException("member not found: " + memberId));
   }
 
+  /**
+   * username, nickname 중복 체크. unique 제약조건을 걸어서 postgresql 에서 자동으로 해당 컬럼의 인덱스를 만들어줌.
+   */
   public void checkDuplication(final String username, final String nickname) {
     if (memberRepository.existsByUsername(username)) {
       throw new IllegalArgumentException("Duplication check failed: username already exists");
