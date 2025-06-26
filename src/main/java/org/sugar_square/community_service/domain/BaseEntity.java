@@ -21,6 +21,5 @@ public abstract class BaseEntity {
   @LastModifiedDate
   private Instant updatedAt;
 
-  // TODO: 커스텀 repository 에 soft delete 메서드 정의 > 엔티티 repository 에 상속 후 사용
   private Instant deletedAt;
 }

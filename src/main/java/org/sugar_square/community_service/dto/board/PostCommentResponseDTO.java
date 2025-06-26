@@ -8,7 +8,7 @@ import org.sugar_square.community_service.domain.board.Comment;
 public record PostCommentResponseDTO(
     Long id,
     Long parentId,
-    Long postId, // TODO: 필요한 속성인지 검토
+    Long postId,
     String content,
     // 이하는 삭제된 comment 의 경우 null
     String writerNickname,
@@ -33,12 +33,12 @@ public record PostCommentResponseDTO(
   }
 
   private static PostCommentResponseDTO removedCommentToDTO(final Comment entity) {
-    String deleteMessage = "삭제된 댓글입니다";
+    final String DELETED_MESSAGE = "삭제된 댓글입니다";
     return PostCommentResponseDTO.builder()
         .id(entity.getId())
         .parentId(entity.getParent() != null ? entity.getParent().getId() : null)
         .postId(entity.getPost().getId())
-        .content(deleteMessage)
+        .content(DELETED_MESSAGE)
         .build();
   }
 

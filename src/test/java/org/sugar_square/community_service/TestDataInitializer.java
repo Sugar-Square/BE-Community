@@ -1,7 +1,11 @@
 package org.sugar_square.community_service;
 
+import static org.sugar_square.community_service.enums.RoleEnum.USER;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -25,6 +29,9 @@ public class TestDataInitializer {
   public static final String MEMBER_USERNAME = "test_username";
   public static final String MEMBER_PASSWORD = "test_password";
   public static final String MEMBER_NICKNAME = "test_nickname";
+  public static final String MEMBER_NAME = "test_name";
+  public static final String MEMBER_BIRTHDAY = "2025-01-01"; // format: yyyy-MM-dd
+  public static final String MEMBER_EMAIL = "test@gmail.com"; // format: yyyy-MM-dd
   public static final String CATEGORY_NAME = "test_category";
   public static final String CATEGORY_DESCRIPTION = "test_description";
   public static final String POST_TITLE = "test_title";
@@ -127,6 +134,11 @@ public class TestDataInitializer {
             .username(MEMBER_USERNAME + i)
             .password(MEMBER_PASSWORD + i)
             .nickname(MEMBER_NICKNAME + i)
+            .role(USER)
+            // nullable
+            .name(MEMBER_NAME + i)
+            .birthday(LocalDate.parse(MEMBER_BIRTHDAY, DateTimeFormatter.ISO_LOCAL_DATE))
+            .email(MEMBER_EMAIL)
             .build()
     );
     members.add(savedMember);

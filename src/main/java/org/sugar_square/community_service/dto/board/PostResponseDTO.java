@@ -16,7 +16,6 @@ public record PostResponseDTO(
 ) {
 
   public static PostResponseDTO fromEntity(Post entity) {
-    // TODO: 작성자, 카테고리 이름 변환
     return PostResponseDTO.builder()
         .title(entity.getTitle())
         .content(entity.getContent())

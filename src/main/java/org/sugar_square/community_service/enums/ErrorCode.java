@@ -1,4 +1,4 @@
-package org.sugar_square.community_service.domain.report;
+package org.sugar_square.community_service.enums;
 
 public enum ErrorCode {
   OPERATION_ERROR, // 동작 오류
