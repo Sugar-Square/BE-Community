@@ -2,7 +2,6 @@ package org.sugar_square.community_service.repository.board;
 
 import static com.querydsl.core.types.Order.ASC;
 import static com.querydsl.core.types.Order.DESC;
-import static org.sugar_square.community_service.enums.PostSearchType.INVALID;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
@@ -115,16 +114,17 @@ public class PostSearchImpl implements PostSearch {
 
   private BooleanBuilder getSearchBuilder(QPost post, PostSearchType type, String keyword) {
     BooleanBuilder builder = new BooleanBuilder();
-    boolean hasType = type != INVALID;
     boolean hasKeyword = StringUtils.hasText(keyword);
-    if (hasType && hasKeyword) {
+    // type == INVALID, hasKeyword == false -> 예외 x, 전체 list 조회
+    // type == INVALID, hasKeyword == true  -> 예외 o, 예외 코드 response
+    if (hasKeyword) {
       switch (type) {
         case TITLE -> builder.and(post.title.containsIgnoreCase(keyword));
         case CONTENT -> builder.and(post.content.containsIgnoreCase(keyword));
         case TITLE_AND_CONTENT -> builder.or(post.title.containsIgnoreCase(keyword)
             .or(post.content.containsIgnoreCase(keyword)));
         case WRITER -> builder.and(post.writer.nickname.containsIgnoreCase(keyword));
-//        case INVALID -> throw new IllegalArgumentException("Unexpected Post search type: " + type);
+        case INVALID -> throw new IllegalArgumentException("Unexpected Post search type: " + type);
       }
     }
     return builder;

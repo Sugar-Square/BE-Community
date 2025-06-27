@@ -7,6 +7,7 @@ import java.time.Instant;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -33,6 +34,7 @@ import org.sugar_square.community_service.service.board.PostService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/posts")
+@Slf4j
 public class PostController {
 
   private final PostService postService;
@@ -47,7 +49,12 @@ public class PostController {
       @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") final String startDate,
       @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") final String endDate
   ) {
-    SearchCondition condition = new SearchCondition(searchType, keyword, startDate, endDate);
+    // TODO : keyword 앞 뒤 공백 제거 (keyword.strip(), keyword.trim() 을 SearchCondition 생성자에 전달했으나 공백 제거되지 않았음)C
+    SearchCondition condition = new SearchCondition(searchType, keyword, startDate,
+        endDate);
+
+    log.info("searchCategoryPost called with condition: {}", condition);
+
     PageResponseDTO<PostPreviewDTO> result = postService.searchInCategoryPost(pageable, categoryId,
         condition);
     return ResponseEntity.ok(result);
