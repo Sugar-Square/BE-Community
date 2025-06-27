@@ -36,9 +36,10 @@ import org.sugar_square.community_service.service.board.PostService;
 public class PostController {
 
   private final PostService postService;
-  
+
   @GetMapping("/category/{categoryId}")
   public ResponseEntity<PageResponseDTO<PostPreviewDTO>> searchCategoryPost(
+      // sort 타입은 PostOrderProps 에 정의된 타입으로만 결정 (외에는 exception 발생)
       @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = DESC) final Pageable pageable,
       @PathVariable final Long categoryId,
       @RequestParam(defaultValue = "") final String searchType, // 검색 타입 (제목, 내용, 작성자, 제목+내용 등)

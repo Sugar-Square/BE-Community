@@ -25,6 +25,7 @@ import org.sugar_square.community_service.controller.board.PostController.Search
 import org.sugar_square.community_service.domain.board.Category;
 import org.sugar_square.community_service.domain.board.Post;
 import org.sugar_square.community_service.domain.board.QPost;
+import org.sugar_square.community_service.enums.PostOrderProps;
 import org.sugar_square.community_service.enums.PostSearchType;
 
 @RequiredArgsConstructor
@@ -75,14 +76,14 @@ public class PostSearchImpl implements PostSearch {
     Iterator<Order> orders = sort.iterator();
     List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
     while (orders.hasNext()) {
-      Order order = orders.next();
-      OrderSpecifier<?> orderspecifier = switch (order.getProperty()) {
-        case "createdAt" -> new OrderSpecifier<>(order.isAscending() ? ASC : DESC, post.createdAt);
-        case "title" -> new OrderSpecifier<>(order.isAscending() ? ASC : DESC, post.title);
-        case "writer" ->
-            new OrderSpecifier<>(order.isAscending() ? ASC : DESC, post.writer.nickname);
-        case "id" -> new OrderSpecifier<>(order.isAscending() ? ASC : DESC, post.id);
-        default -> throw new IllegalArgumentException(
+      Order order = orders.next(); // get pageable order
+      PostOrderProps prop = PostOrderProps.fromString(order.getProperty()); // return Order const
+      OrderSpecifier<?> orderspecifier = switch (prop) {
+        case CREATED_AT -> new OrderSpecifier<>(order.isAscending() ? ASC : DESC, post.createdAt);
+        case TITLE -> new OrderSpecifier<>(order.isAscending() ? ASC : DESC, post.title);
+        case WRITER -> new OrderSpecifier<>(order.isAscending() ? ASC : DESC, post.writer.nickname);
+        case ID -> new OrderSpecifier<>(order.isAscending() ? ASC : DESC, post.id);
+        case INVALID -> throw new IllegalArgumentException(
             "Unexpected Post order property: " + order.getProperty()
         );
       };
@@ -106,7 +107,7 @@ public class PostSearchImpl implements PostSearch {
     BooleanBuilder builder = new BooleanBuilder();
     boolean hasStartDate = start != null;
     boolean hasEndDate = end != null;
-    if (hasStartDate && hasEndDate) {
+    if (hasStartDate && hasEndDate) { // TODO : 검색 가능 범위 제한
       builder.and(post.createdAt.between(start, end));
     }
     return builder;
@@ -123,6 +124,7 @@ public class PostSearchImpl implements PostSearch {
         case TITLE_AND_CONTENT -> builder.or(post.title.containsIgnoreCase(keyword)
             .or(post.content.containsIgnoreCase(keyword)));
         case WRITER -> builder.and(post.writer.nickname.containsIgnoreCase(keyword));
+//        case INVALID -> throw new IllegalArgumentException("Unexpected Post search type: " + type);
       }
     }
     return builder;
