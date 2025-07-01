@@ -29,10 +29,13 @@ public class CustomSecurityConfig {
 
   @Bean
   public WebSecurityCustomizer webSecurityCustomizer() {
-    // 정적 리소스에 대해 security 필터 적용 x
     return web -> web.ignoring()
+        // 정적 리소스에 대해 security 필터 적용 x\
         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-        .requestMatchers("/api/members/signup", "/api/members/check-duplication");
+        // 회원가입, 중복 체크 api 는 인증 요구 x
+        .requestMatchers("/api/members/signup", "/api/members/check-duplication")
+        // 인증 기능 구현 전 테스트 용으로 모든 api 요청에 대해 인증 요구 x
+        .requestMatchers("/api/**");
   }
 
   @Bean

@@ -7,6 +7,7 @@ import java.time.Instant;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -33,12 +34,14 @@ import org.sugar_square.community_service.service.board.PostService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/posts")
+@Slf4j
 public class PostController {
 
   private final PostService postService;
-  
+
   @GetMapping("/category/{categoryId}")
   public ResponseEntity<PageResponseDTO<PostPreviewDTO>> searchCategoryPost(
+      // sort 타입은 PostOrderProps 에 정의된 타입으로만 결정 (외에는 exception 발생)
       @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = DESC) final Pageable pageable,
       @PathVariable final Long categoryId,
       @RequestParam(defaultValue = "") final String searchType, // 검색 타입 (제목, 내용, 작성자, 제목+내용 등)
@@ -91,7 +94,7 @@ public class PostController {
 
     public SearchCondition(String searchType, String keyword, String startDate, String endDate) {
       this.searchType = PostSearchType.fromString(searchType);
-      this.keyword = keyword;
+      this.keyword = keyword.strip(); // 검색어 앞뒤 공백 제거
       this.startDate =
           StringUtils.hasText(startDate) ? Instant.parse(startDate + "T00:00:00Z") : null;
       this.endDate =

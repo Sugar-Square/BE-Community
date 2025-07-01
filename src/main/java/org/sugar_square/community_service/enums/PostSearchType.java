@@ -7,7 +7,7 @@ public enum PostSearchType {
     return switch (type) {
       case "t" -> TITLE;
       case "c" -> CONTENT;
-      case "t+c" -> TITLE_AND_CONTENT;
+      case "tc" -> TITLE_AND_CONTENT;
       case "w" -> WRITER;
       default -> INVALID;
     };

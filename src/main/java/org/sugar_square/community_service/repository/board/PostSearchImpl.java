@@ -2,7 +2,6 @@ package org.sugar_square.community_service.repository.board;
 
 import static com.querydsl.core.types.Order.ASC;
 import static com.querydsl.core.types.Order.DESC;
-import static org.sugar_square.community_service.enums.PostSearchType.INVALID;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
@@ -25,6 +24,7 @@ import org.sugar_square.community_service.controller.board.PostController.Search
 import org.sugar_square.community_service.domain.board.Category;
 import org.sugar_square.community_service.domain.board.Post;
 import org.sugar_square.community_service.domain.board.QPost;
+import org.sugar_square.community_service.enums.PostOrderProps;
 import org.sugar_square.community_service.enums.PostSearchType;
 
 @RequiredArgsConstructor
@@ -75,14 +75,14 @@ public class PostSearchImpl implements PostSearch {
     Iterator<Order> orders = sort.iterator();
     List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
     while (orders.hasNext()) {
-      Order order = orders.next();
-      OrderSpecifier<?> orderspecifier = switch (order.getProperty()) {
-        case "createdAt" -> new OrderSpecifier<>(order.isAscending() ? ASC : DESC, post.createdAt);
-        case "title" -> new OrderSpecifier<>(order.isAscending() ? ASC : DESC, post.title);
-        case "writer" ->
-            new OrderSpecifier<>(order.isAscending() ? ASC : DESC, post.writer.nickname);
-        case "id" -> new OrderSpecifier<>(order.isAscending() ? ASC : DESC, post.id);
-        default -> throw new IllegalArgumentException(
+      Order order = orders.next(); // get pageable order
+      PostOrderProps prop = PostOrderProps.fromString(order.getProperty()); // return Order const
+      OrderSpecifier<?> orderspecifier = switch (prop) {
+        case CREATED_AT -> new OrderSpecifier<>(order.isAscending() ? ASC : DESC, post.createdAt);
+        case TITLE -> new OrderSpecifier<>(order.isAscending() ? ASC : DESC, post.title);
+        case WRITER -> new OrderSpecifier<>(order.isAscending() ? ASC : DESC, post.writer.nickname);
+        case ID -> new OrderSpecifier<>(order.isAscending() ? ASC : DESC, post.id);
+        case INVALID -> throw new IllegalArgumentException(
             "Unexpected Post order property: " + order.getProperty()
         );
       };
@@ -104,25 +104,38 @@ public class PostSearchImpl implements PostSearch {
 
   private BooleanBuilder getDateBuilder(QPost post, Instant start, Instant end) {
     BooleanBuilder builder = new BooleanBuilder();
-    boolean hasStartDate = start != null;
-    boolean hasEndDate = end != null;
-    if (hasStartDate && hasEndDate) {
-      builder.and(post.createdAt.between(start, end));
+    final boolean hasStartDate = start != null;
+    final boolean hasEndDate = end != null;
+    if (!hasStartDate || !hasEndDate) {
+      return builder; // 빈 BooleanBuilder 반환
     }
+    if (isOverYear(start, end)) {
+      // 날짜 범위가 1년을 초과하는 경우 예외 발생
+      throw new IllegalArgumentException("Date range over 1 year is not allowed");
+    }
+    builder.and(post.createdAt.between(start, end));  // 정상 날짜 범위 설정
     return builder;
+  }
+
+  private boolean isOverYear(Instant start, Instant end) {
+    // start < end - 1 year == 날짜 범위가 1년을 초과함
+    final long ONE_YEAR_SECONDS = 60 * 60 * 24 * 365L;
+    return end.minusSeconds(ONE_YEAR_SECONDS).isAfter(start);
   }
 
   private BooleanBuilder getSearchBuilder(QPost post, PostSearchType type, String keyword) {
     BooleanBuilder builder = new BooleanBuilder();
-    boolean hasType = type != INVALID;
     boolean hasKeyword = StringUtils.hasText(keyword);
-    if (hasType && hasKeyword) {
+    // type == INVALID, hasKeyword == false -> 예외 x, 전체 list 조회
+    // type == INVALID, hasKeyword == true  -> 예외 o, 예외 코드 response
+    if (hasKeyword) {
       switch (type) {
         case TITLE -> builder.and(post.title.containsIgnoreCase(keyword));
         case CONTENT -> builder.and(post.content.containsIgnoreCase(keyword));
         case TITLE_AND_CONTENT -> builder.or(post.title.containsIgnoreCase(keyword)
             .or(post.content.containsIgnoreCase(keyword)));
         case WRITER -> builder.and(post.writer.nickname.containsIgnoreCase(keyword));
+        case INVALID -> throw new IllegalArgumentException("Unexpected Post search type: " + type);
       }
     }
     return builder;
