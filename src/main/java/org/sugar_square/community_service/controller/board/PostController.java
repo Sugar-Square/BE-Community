@@ -49,12 +49,7 @@ public class PostController {
       @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") final String startDate,
       @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") final String endDate
   ) {
-    // TODO : keyword 앞 뒤 공백 제거 (keyword.strip(), keyword.trim() 을 SearchCondition 생성자에 전달했으나 공백 제거되지 않았음)C
-    SearchCondition condition = new SearchCondition(searchType, keyword, startDate,
-        endDate);
-
-    log.info("searchCategoryPost called with condition: {}", condition);
-
+    SearchCondition condition = new SearchCondition(searchType, keyword, startDate, endDate);
     PageResponseDTO<PostPreviewDTO> result = postService.searchInCategoryPost(pageable, categoryId,
         condition);
     return ResponseEntity.ok(result);
@@ -99,7 +94,7 @@ public class PostController {
 
     public SearchCondition(String searchType, String keyword, String startDate, String endDate) {
       this.searchType = PostSearchType.fromString(searchType);
-      this.keyword = keyword;
+      this.keyword = keyword.strip(); // 검색어 앞뒤 공백 제거
       this.startDate =
           StringUtils.hasText(startDate) ? Instant.parse(startDate + "T00:00:00Z") : null;
       this.endDate =
