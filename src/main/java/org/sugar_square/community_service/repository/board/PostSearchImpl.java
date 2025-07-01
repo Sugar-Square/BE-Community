@@ -104,12 +104,23 @@ public class PostSearchImpl implements PostSearch {
 
   private BooleanBuilder getDateBuilder(QPost post, Instant start, Instant end) {
     BooleanBuilder builder = new BooleanBuilder();
-    boolean hasStartDate = start != null;
-    boolean hasEndDate = end != null;
-    if (hasStartDate && hasEndDate) { // TODO : 검색 가능 범위 제한
-      builder.and(post.createdAt.between(start, end));
+    final boolean hasStartDate = start != null;
+    final boolean hasEndDate = end != null;
+    if (!hasStartDate || !hasEndDate) {
+      return builder; // 빈 BooleanBuilder 반환
     }
+    if (isOverYear(start, end)) {
+      // 날짜 범위가 1년을 초과하는 경우 예외 발생
+      throw new IllegalArgumentException("Date range over 1 year is not allowed");
+    }
+    builder.and(post.createdAt.between(start, end));  // 정상 날짜 범위 설정
     return builder;
+  }
+
+  private boolean isOverYear(Instant start, Instant end) {
+    // start < end - 1 year == 날짜 범위가 1년을 초과함
+    final long ONE_YEAR_SECONDS = 60 * 60 * 24 * 365L;
+    return end.minusSeconds(ONE_YEAR_SECONDS).isAfter(start);
   }
 
   private BooleanBuilder getSearchBuilder(QPost post, PostSearchType type, String keyword) {
