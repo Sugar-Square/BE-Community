@@ -29,19 +29,19 @@ public class Schedule extends BaseEntity {
   private Long id;
 
   @Column(nullable = false)
-  private Instant scheduleDate; // TODO: DTO 에서 한 번 더 null 검증
+  private Instant scheduleDate; // 일정 날짜
 
   @Column(nullable = false)
-  private String title; // TODO: DTO 에서 한 번 더 null 검증
+  private String title;
 
-  private Instant notificationDate;
+  private Instant notificationDate; // 알림 날짜
 
   @Column(columnDefinition = "TEXT") // postgresql TEXT
-  private String content;
+  private String content; // 일정 설명 (description), 500자 제한
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id", nullable = false, updatable = false)
-  private Member writer; // TODO: DTO 에서 한 번 더 null 검증
+  private Member writer;
 
   @Builder
   private Schedule(
