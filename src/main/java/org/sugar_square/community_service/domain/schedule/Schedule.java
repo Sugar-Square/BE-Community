@@ -57,9 +57,14 @@ public class Schedule extends BaseEntity {
     this.writer = writer;
   }
 
-  /*
-   * TODO:
-   *  1. 일정 시간 수정 메서드
-   *  2. 알림 시간 수정 메서드 (일정 시간의 상대적 시간을 받아서 수정)
-   *  */
+  public void update(
+      final String newTitle,
+      final Instant newScheduleDate,
+      final Instant newNotificationDate,
+      final String newContent) {
+    this.title = newTitle; // not null
+    this.scheduleDate = newScheduleDate; // not null
+    this.notificationDate = newNotificationDate;
+    this.content = newContent;
+  }
 }
