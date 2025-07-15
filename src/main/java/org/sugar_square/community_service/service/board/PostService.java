@@ -43,6 +43,7 @@ public class PostService {
     return PageResponseDTO.of(pageable, dtoList, (int) pages.getTotalElements());
   }
 
+  // TODO : 이후 ID -> Post 엔티티를 반환하는걸로 수정할지 고민
   @Transactional(readOnly = false)
   public Long register(final PostRegisterDTO registerDTO) {
     Member writer = memberService.findOneById(registerDTO.memberId());

@@ -18,8 +18,7 @@ import org.sugar_square.community_service.service.member.MemberService;
 public class MemberController {
 
   private final MemberService memberService;
-
-
+  
   /**
    * 일반 유저용 회원가입 api 관리자는 db query 로 직접 생성
    */

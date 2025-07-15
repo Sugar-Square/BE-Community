@@ -35,6 +35,9 @@ public class PostCommentService {
         .collect(Collectors.toList());
   }
 
+  /**
+   * 재귀적으로 댓글의 자식 댓글들을 조회
+   */
   private List<Comment> getChildrenRecursively(Comment parent) {
     // parent 의 child 가 없으면 getChildrenRecursively() 가 호출되지 못하고 빈 List 를 반환하며 재귀 종료
     return parent.getChildren().stream()
