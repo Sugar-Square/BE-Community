@@ -37,6 +37,14 @@ public class ScheduleService {
         modifyDTO.content());
   }
 
+  @Transactional
+  public void remove(final Long scheduleId) {
+    if (!scheduleRepository.existsById(scheduleId)) {
+      throw new EntityNotFoundException("Schedule not found : " + scheduleId);
+    }
+    scheduleRepository.softDeleteById(scheduleId);
+  }
+
   public Schedule findOneById(final Long scheduleId) {
     return scheduleRepository
         .findById(scheduleId)
