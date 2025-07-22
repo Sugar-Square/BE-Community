@@ -17,10 +17,13 @@ import org.sugar_square.community_service.domain.board.Category;
 import org.sugar_square.community_service.domain.board.Comment;
 import org.sugar_square.community_service.domain.board.Post;
 import org.sugar_square.community_service.domain.member.Member;
+import org.sugar_square.community_service.domain.schedule.Schedule;
 import org.sugar_square.community_service.repository.board.CategoryRepository;
 import org.sugar_square.community_service.repository.board.CommentRepository;
 import org.sugar_square.community_service.repository.board.PostRepository;
 import org.sugar_square.community_service.repository.member.MemberRepository;
+import org.sugar_square.community_service.repository.schedule.ScheduleRepository;
+import org.sugar_square.community_service.utils.StringDateConverter;
 
 @Component
 @ActiveProfiles("test")
@@ -37,9 +40,11 @@ public class TestDataInitializer {
   public static final String POST_TITLE = "test_title";
   public static final String POST_CONTENT = "test_content";
   public static final String COMMENT_CONTENT = "test_content";
+  public static final String SCHEDULE_TITLE = "test_schedule_title";
+  public static final String SCHEDULE_CONTENT = "test_schedule_content";
+  public static final String SCHEDULE_DATE = "2025-08-01T00:00:00Z"; // format: yyyy-MM-dd'T'HH:mm:ss'Z'
+  public static final String SCHEDULE_NOTIFICATION_DATE = "2025-07-31T00:00:00Z"; // format: yyyy-MM-dd'T'HH:mm:ss'Z'
   public static final int DUMMY_COUNT = 10;
-//  public static final int DUMMY_POST_COUNT = 5;
-//  public static final int DUMMY_COMMENT_COUNT = 5;
 
   @PersistenceContext
   private EntityManager em;
@@ -56,6 +61,9 @@ public class TestDataInitializer {
   @Autowired
   private CommentRepository commentRepository;
 
+  @Autowired
+  private ScheduleRepository scheduleRepository;
+
   private final List<String> tableNames = new ArrayList<>();
 
   @Getter
@@ -70,11 +78,15 @@ public class TestDataInitializer {
   @Getter
   private final List<Comment> comments = new ArrayList<>();
 
+  @Getter
+  private final List<Schedule> schedules = new ArrayList<>();
+
   private void clearLists() {
     members.clear();
     categories.clear();
     posts.clear();
     comments.clear();
+    schedules.clear();
   }
 
   public void init() {
@@ -84,11 +96,26 @@ public class TestDataInitializer {
       Category savedCategory = createCategory(i);
       for (int j = 0; j < DUMMY_COUNT; j++) {
         Post savedPost = createPost(j, savedMember, savedCategory);
+        Schedule savedSchedule = createSchedule(j, savedMember);
         for (int k = 0; k < DUMMY_COUNT; k++) {
           Comment savedComment = createComment(k, savedMember, savedPost);
         }
       }
     }
+  }
+
+  private Schedule createSchedule(final int j, final Member savedMember) {
+    Schedule savedSchedule = scheduleRepository.save(
+        Schedule.builder()
+            .title(SCHEDULE_TITLE + j)
+            .content(SCHEDULE_CONTENT + j)
+            .scheduleDate(StringDateConverter.stringToInstant(SCHEDULE_DATE))
+            .notificationDate(StringDateConverter.stringToInstant(SCHEDULE_NOTIFICATION_DATE))
+            .writer(savedMember)
+            .build()
+    );
+    schedules.add(savedSchedule);
+    return savedSchedule;
   }
 
   private Comment createComment(final int k, final Member savedMember, final Post savedPost) {
