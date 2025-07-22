@@ -13,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.sugar_square.community_service.TestData;
 import org.sugar_square.community_service.TestDataInitializer;
 import org.sugar_square.community_service.domain.schedule.Schedule;
+import org.sugar_square.community_service.dto.schedule.ScheduleModifyDTO;
 import org.sugar_square.community_service.dto.schedule.ScheduleRegisterDTO;
+import org.sugar_square.community_service.utils.StringDateConverter;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -59,5 +61,34 @@ public class ScheduleServiceTest {
         .usingRecursiveComparison()
         .ignoringFields("id", "createdAt", "updatedAt", "deletedAt")
         .isEqualTo(expectedSchedule);
+  }
+
+  @Test
+  @DisplayName("일정 수정 테스트")
+  void modifyScheduleTest() {
+    // given
+    final String modifiedTitle = "modified title";
+    final String modifiedScheduleDate = "2025-01-01T12:00:00Z";
+    final String modifiedNotificationDate = "2024-12-31T12:00:00Z";
+    final String modifiedContent = "modified content";
+    Long scheduleId = testData.getSchedules().getFirst().getId(); // 첫 번째 일정을 수정
+    ScheduleModifyDTO dto = new ScheduleModifyDTO(
+        modifiedTitle,
+        modifiedScheduleDate,
+        modifiedNotificationDate,
+        modifiedContent
+    );
+    // when
+    scheduleService.modify(scheduleId, dto);
+    // then
+    Schedule modified = scheduleService.findOneById(scheduleId);
+    assertThat(modified)
+        .extracting("title", "scheduleDate", "notificationDate", "content")
+        .containsExactly(
+            modifiedTitle,
+            StringDateConverter.stringToInstant(modifiedScheduleDate),
+            StringDateConverter.stringToInstant(modifiedNotificationDate),
+            modifiedContent
+        );
   }
 }

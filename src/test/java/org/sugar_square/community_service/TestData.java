@@ -7,6 +7,7 @@ import org.sugar_square.community_service.domain.board.Category;
 import org.sugar_square.community_service.domain.board.Comment;
 import org.sugar_square.community_service.domain.board.Post;
 import org.sugar_square.community_service.domain.member.Member;
+import org.sugar_square.community_service.domain.schedule.Schedule;
 
 @Getter
 @ActiveProfiles("test")
@@ -16,11 +17,13 @@ public class TestData {
   private final List<Category> categories;
   private final List<Post> posts;
   private final List<Comment> comments;
+  private final List<Schedule> schedules;
 
   public TestData(TestDataInitializer initializer) {
     this.members = initializer.getMembers();
     this.categories = initializer.getCategories();
     this.posts = initializer.getPosts();
     this.comments = initializer.getComments();
+    this.schedules = initializer.getSchedules();
   }
 }
