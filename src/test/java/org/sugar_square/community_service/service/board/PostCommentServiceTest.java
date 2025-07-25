@@ -70,7 +70,7 @@ public class PostCommentServiceTest {
     String content = comment.getContent();
     PostCommentModifyDTO modifyDTO = new PostCommentModifyDTO("modified" + content);
     //when
-    postCommentService.modify(comment.getId(), modifyDTO);
+    postCommentService.modify(comment.getPost().getId(), comment.getId(), modifyDTO);
     //then
     Comment modified = postCommentService.findOneById(comment.getId());
     assertThat(modified.getContent()).isNotEqualTo(content); // 기존 content 와 다르면 PASS
@@ -85,10 +85,11 @@ public class PostCommentServiceTest {
   void removeTest() {
     //given
     List<Comment> comments = testData.getComments();
+    Long postId = comments.getFirst().getPost().getId();
     Long removeId = comments.getFirst().getId();
     Long compareId = comments.getLast().getId();
     //when
-    postCommentService.remove(removeId);
+    postCommentService.remove(postId, removeId);
     //then
     Comment removed = postCommentService.findOneById(removeId);
     Comment compare = postCommentService.findOneById(compareId);

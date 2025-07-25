@@ -26,7 +26,9 @@ public class PostCommentController {
   private final PostCommentService postCommentService;
 
   @GetMapping
-  public ResponseEntity<List<PostCommentResponseDTO>> readPostComments(@PathVariable final Long postId){
+  public ResponseEntity<List<PostCommentResponseDTO>> readPostComments(
+      @PathVariable final Long postId
+  ) {
     List<PostCommentResponseDTO> postComments = postCommentService.readAllByPostId(postId);
     return ResponseEntity.status(HttpStatus.OK).body(postComments);
   }
@@ -36,22 +38,27 @@ public class PostCommentController {
       @PathVariable final Long postId,
       @RequestBody @Valid final PostCommentRegisterDTO registerDTO
   ) {
+    // TODO : post id 매개변수와 comment 의 post id 가 일치하는지 검증
     Long savedCommentId = postCommentService.register(postId, registerDTO);
     return ResponseEntity.status(HttpStatus.CREATED).body("commentId : " + savedCommentId);
   }
 
   @PutMapping("/{commentId}")
   public ResponseEntity<String> modifyComment(
+      @PathVariable final Long postId,
       @PathVariable final Long commentId,
       @RequestBody @Valid final PostCommentModifyDTO modifyDTO
   ) {
-    postCommentService.modify(commentId, modifyDTO);
+    postCommentService.modify(postId, commentId, modifyDTO);
     return ResponseEntity.status(HttpStatus.OK).body("comment modified successfully");
   }
 
   @DeleteMapping("/{commentId}")
-  public ResponseEntity<String> removeComment(@PathVariable final Long commentId) {
-    postCommentService.remove(commentId);
+  public ResponseEntity<String> removeComment(
+      @PathVariable final Long postId,
+      @PathVariable final Long commentId
+  ) {
+    postCommentService.remove(postId, commentId);
     return ResponseEntity.status(HttpStatus.OK).body("comment removed successfully");
   }
 }
