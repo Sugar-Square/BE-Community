@@ -53,7 +53,13 @@ public class PostCommentService {
     Member writer = memberService.findOneById(registerDTO.memberId());
     Comment parent = null;
     if (registerDTO.parentId() != null) {
-      parent = findOneById(registerDTO.parentId());
+      Comment tempComment = findOneById(registerDTO.parentId());
+      // postId 의 포스트에 parentId 가 속해있는지 검증
+      if (!tempComment.getPost().getId().equals(postId)) {
+        throw new IllegalArgumentException(
+            "Parent comment does not belong to the post by post id.");
+      }
+      parent = tempComment;
     }
     Comment registered = Comment.builder()
         .content(registerDTO.content())
@@ -66,14 +72,24 @@ public class PostCommentService {
   }
 
   @Transactional
-  public void modify(final Long commentId, final PostCommentModifyDTO modifyDTO) {
+  public void modify(
+      final Long postId,
+      final Long commentId,
+      final PostCommentModifyDTO modifyDTO
+  ) {
     Comment foundComment = findOneById(commentId);
+    if (!foundComment.getPost().getId().equals(postId)) {
+      throw new IllegalArgumentException("Comment does not belong to the post by post id.");
+    }
     foundComment.update(modifyDTO.content());
   }
 
   @Transactional
-  public void remove(final Long commentId) {
+  public void remove(final Long postId, final Long commentId) {
     Comment foundComment = findOneById(commentId);
+    if (!foundComment.getPost().getId().equals(postId)) {
+      throw new IllegalArgumentException("Comment does not belong to the post by post id.");
+    }
     commentRepository.softDeleteById(foundComment.getId());
   }
 
