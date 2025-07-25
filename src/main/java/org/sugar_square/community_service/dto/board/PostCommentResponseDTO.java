@@ -9,6 +9,7 @@ public record PostCommentResponseDTO(
     Long id,
     Long parentId,
     Long postId,
+    Long memberId,
     String content,
     // 이하는 삭제된 comment 의 경우 null
     String writerNickname,
@@ -25,6 +26,7 @@ public record PostCommentResponseDTO(
         .id(entity.getId())
         .parentId(entity.getParent() != null ? entity.getParent().getId() : null)
         .postId(entity.getPost().getId())
+        .memberId(entity.getWriter().getId())
         .content(entity.getContent())
         .writerNickname(entity.getWriter().getNickname())
         .createdAt(entity.getCreatedAt())
@@ -41,5 +43,4 @@ public record PostCommentResponseDTO(
         .content(DELETED_MESSAGE)
         .build();
   }
-
 }
