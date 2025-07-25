@@ -1,6 +1,7 @@
 package org.sugar_square.community_service.service.schedule;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +16,7 @@ import org.sugar_square.community_service.TestDataInitializer;
 import org.sugar_square.community_service.domain.schedule.Schedule;
 import org.sugar_square.community_service.dto.schedule.ScheduleModifyDTO;
 import org.sugar_square.community_service.dto.schedule.ScheduleRegisterDTO;
+import org.sugar_square.community_service.exception.EntityNotFoundException;
 import org.sugar_square.community_service.utils.StringDateConverter;
 
 @SpringBootTest
@@ -90,5 +92,18 @@ public class ScheduleServiceTest {
             StringDateConverter.stringToInstant(modifiedNotificationDate),
             modifiedContent
         );
+  }
+
+  @Test
+  @DisplayName("일정 삭제 테스트")
+  void removeScheduleTest() {
+    // given
+    Schedule schedule = testData.getSchedules().getFirst();
+    // when
+    scheduleService.remove(schedule.getId());
+    // then
+    assertThatThrownBy(() -> scheduleService.findOneById(schedule.getId()))
+        .isInstanceOf(EntityNotFoundException.class)
+        .hasMessage("Schedule not found : " + schedule.getId());
   }
 }

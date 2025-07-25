@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -37,5 +38,11 @@ public class ScheduleController {
   ) {
     scheduleService.modify(scheduleId, modifyDTO);
     return ResponseEntity.ok("schedule modified successfully");
+  }
+
+  @DeleteMapping("/{scheduleId}")
+  public ResponseEntity<String> removeSchedule(@PathVariable final Long scheduleId) {
+    scheduleService.remove(scheduleId);
+    return ResponseEntity.ok("schedule deleted successfully");
   }
 }
