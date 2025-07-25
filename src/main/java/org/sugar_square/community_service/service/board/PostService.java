@@ -44,7 +44,7 @@ public class PostService {
   }
 
   // TODO : 이후 ID -> Post 엔티티를 반환하는걸로 수정할지 고민
-  @Transactional(readOnly = false)
+  @Transactional
   public Long register(final PostRegisterDTO registerDTO) {
     Member writer = memberService.findOneById(registerDTO.memberId());
     Category category = categoryService.findOneById(registerDTO.categoryId());
@@ -58,24 +58,26 @@ public class PostService {
     return result.getId();
   }
 
-  @Transactional(readOnly = false)
+  @Transactional
   public PostResponseDTO readOneById(final Long postId) {
     Post foundPost = findOneById(postId);
     foundPost.increaseViewCount();
     return PostResponseDTO.fromEntity(foundPost);
   }
 
-  @Transactional(readOnly = false)
+  @Transactional
   public void modify(final Long postId, final PostModifyDTO modifyDTO) {
     Post foundPost = findOneById(postId);
     Category newCategory = categoryService.findOneById(modifyDTO.categoryId());
     foundPost.update(modifyDTO.title(), modifyDTO.content(), newCategory);
   }
 
-  @Transactional(readOnly = false)
+  @Transactional
   public void remove(final Long postId) {
-    Post foundPost = findOneById(postId);
-    postRepository.softDeleteById(foundPost.getId());
+    if (!postRepository.existsById(postId)) {
+      throw new EntityNotFoundException("Post not found : " + postId);
+    }
+    postRepository.softDeleteById(postId);
   }
 
   public Post findOneById(final Long postId) {
