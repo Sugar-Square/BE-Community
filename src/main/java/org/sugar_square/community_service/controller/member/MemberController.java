@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +20,7 @@ import org.sugar_square.community_service.service.member.MemberService;
 public class MemberController {
 
   private final MemberService memberService;
-  
+
   /**
    * 일반 유저용 회원가입 api 관리자는 db query 로 직접 생성
    */
@@ -43,6 +45,15 @@ public class MemberController {
     return ResponseEntity.ok("Duplication check passed");
   }
 
+  @DeleteMapping("/{memberId}")
+  public ResponseEntity<String> withdrawMember(@PathVariable final Long memberId) {
+    memberService.remove(memberId);
+    return ResponseEntity.ok("Member withdrawn successfully");
+  }
+
+  /* * * * * * * * * * * * * * * * * * * *
+                  NOT TEST
+   * * * * * * * * * * * * * * * * * * * */
   public record DuplicationCheckRequest(String username, String nickname) {
 
   }

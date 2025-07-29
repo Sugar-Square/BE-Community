@@ -38,6 +38,14 @@ public class MemberService {
     return memberRepository.save(newMember);
   }
 
+  @Transactional
+  public void remove(final Long memberId) {
+    if (!memberRepository.existsById(memberId)) {
+      throw new EntityNotFoundException("Member not found : " + memberId);
+    }
+    memberRepository.softDeleteById(memberId);
+  }
+
   public Member findOneById(final Long memberId) {
     return memberRepository
         .findById(memberId)
