@@ -16,6 +16,7 @@ import org.sugar_square.community_service.TestData;
 import org.sugar_square.community_service.TestDataInitializer;
 import org.sugar_square.community_service.domain.member.Member;
 import org.sugar_square.community_service.dto.member.SignUpRequestDTO;
+import org.sugar_square.community_service.exception.EntityNotFoundException;
 
 @SpringBootTest
 @Transactional
@@ -94,5 +95,19 @@ public class MemberServiceTest {
         () -> memberService.checkDuplication(member.getUsername(), member.getNickname()))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Duplication check failed: username already exists");
+  }
+
+  @Test
+  @DisplayName("회원 탈퇴 테스트")
+  void withdrawMemberTest() {
+    // given
+    Member removeMember = testData.getMembers().getFirst();
+    Long removeMemberId = removeMember.getId();
+    // when
+    memberService.remove(removeMemberId);
+    // then
+    assertThatThrownBy(() -> memberService.findOneById(removeMemberId))
+        .isInstanceOf(EntityNotFoundException.class)
+        .hasMessage("member not found: " + removeMemberId);
   }
 }
