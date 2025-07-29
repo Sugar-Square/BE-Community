@@ -4,9 +4,8 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.util.StringUtils;
+import org.sugar_square.community_service.utils.StringDateConverter;
 
 public record SignUpRequestDTO(
     @NotNull(message = "You must input a username")
@@ -24,9 +23,6 @@ public record SignUpRequestDTO(
 
   @Nullable
   public LocalDate getLocalDateBirthday() {
-    if (!StringUtils.hasText(this.birthday)) {
-      return null;
-    }
-    return LocalDate.parse(this.birthday, DateTimeFormatter.ISO_LOCAL_DATE);
+    return StringDateConverter.stringToLocalDate(birthday);
   }
 }

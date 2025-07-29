@@ -2,6 +2,7 @@ package org.sugar_square.community_service.service.schedule;
 
 import static org.sugar_square.community_service.utils.StringDateConverter.stringToInstant;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,9 +10,12 @@ import org.sugar_square.community_service.domain.member.Member;
 import org.sugar_square.community_service.domain.schedule.Schedule;
 import org.sugar_square.community_service.dto.schedule.ScheduleModifyDTO;
 import org.sugar_square.community_service.dto.schedule.ScheduleRegisterDTO;
+import org.sugar_square.community_service.dto.schedule.ScheduleResponseDTO;
 import org.sugar_square.community_service.exception.EntityNotFoundException;
 import org.sugar_square.community_service.repository.schedule.ScheduleRepository;
 import org.sugar_square.community_service.service.member.MemberService;
+import org.sugar_square.community_service.utils.StringDateConverter;
+import org.sugar_square.community_service.utils.StringDateConverter.InstantYearMonth;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +47,15 @@ public class ScheduleService {
       throw new EntityNotFoundException("Schedule not found : " + scheduleId);
     }
     scheduleRepository.softDeleteById(scheduleId);
+  }
+
+  public List<ScheduleResponseDTO> readForMonth(final String yearMonth) {
+    // yearMonth 가 null 이면 현재 연월로 설정 (stringYearMonthToInstantStartEnd 메서드에서 처리)
+    InstantYearMonth startEnd = StringDateConverter.stringYearMonthToInstantStartEnd(yearMonth);
+    return scheduleRepository.findScheduleByScheduleDateBetween(startEnd.start(), startEnd.end())
+        .stream()
+        .map(ScheduleResponseDTO::fromEntity)
+        .toList();
   }
 
   public Schedule findOneById(final Long scheduleId) {

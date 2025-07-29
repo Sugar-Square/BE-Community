@@ -3,6 +3,7 @@ package org.sugar_square.community_service.service.schedule;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +17,7 @@ import org.sugar_square.community_service.TestDataInitializer;
 import org.sugar_square.community_service.domain.schedule.Schedule;
 import org.sugar_square.community_service.dto.schedule.ScheduleModifyDTO;
 import org.sugar_square.community_service.dto.schedule.ScheduleRegisterDTO;
+import org.sugar_square.community_service.dto.schedule.ScheduleResponseDTO;
 import org.sugar_square.community_service.exception.EntityNotFoundException;
 import org.sugar_square.community_service.utils.StringDateConverter;
 
@@ -37,6 +39,27 @@ public class ScheduleServiceTest {
   @AfterEach
   void cleanup(@Autowired TestDataInitializer initializer) {
     initializer.clear();
+  }
+
+  @Test
+  @DisplayName("월별 일정 조회 테스트")
+  void readSchedulesForMonthTest() {
+    // given
+    final String validYearMonth = "2025-08"; // 테스트 데이터 날짜 : "2025-08-01T00:00:00Z"
+    final String invalidYearMonth = "2025-07";
+    List<ScheduleResponseDTO> expected = testData.getSchedules()
+        .stream()
+        .map(ScheduleResponseDTO::fromEntity)
+        .toList();
+    // when
+    List<ScheduleResponseDTO> validResult = scheduleService.readForMonth(validYearMonth);
+    List<ScheduleResponseDTO> invalidResult = scheduleService.readForMonth(invalidYearMonth);
+    // then
+    assertThat(validResult)
+        .usingRecursiveComparison()
+        .ignoringFields("createdAt", "updatedAt", "deletedAt")
+        .isEqualTo(expected);
+    assertThat(invalidResult).isEmpty();
   }
 
   @Test
