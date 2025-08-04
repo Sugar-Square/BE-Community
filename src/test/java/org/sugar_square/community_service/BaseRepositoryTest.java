@@ -1,7 +1,7 @@
 package org.sugar_square.community_service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.sugar_square.community_service.enums.RoleEnum.USER;
+import static org.sugar_square.community_service.enums.RoleEnum.ROLE_USER;
 
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +31,7 @@ public class BaseRepositoryTest {
             .username("test")
             .password("test")
             .nickname("test")
-            .role(USER)
+            .role(ROLE_USER)
             .build()
     );
   }

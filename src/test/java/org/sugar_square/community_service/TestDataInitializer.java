@@ -1,6 +1,6 @@
 package org.sugar_square.community_service;
 
-import static org.sugar_square.community_service.enums.RoleEnum.USER;
+import static org.sugar_square.community_service.enums.RoleEnum.ROLE_USER;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -161,7 +161,7 @@ public class TestDataInitializer {
             .username(MEMBER_USERNAME + i)
             .password(MEMBER_PASSWORD + i)
             .nickname(MEMBER_NICKNAME + i)
-            .role(USER)
+            .role(ROLE_USER)
             // nullable
             .name(MEMBER_NAME + i)
             .birthday(LocalDate.parse(MEMBER_BIRTHDAY, DateTimeFormatter.ISO_LOCAL_DATE))
