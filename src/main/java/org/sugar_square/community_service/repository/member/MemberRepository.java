@@ -5,7 +5,7 @@ import org.sugar_square.community_service.domain.member.Member;
 import org.sugar_square.community_service.repository.BaseRepository;
 
 @Repository
-public interface MemberRepository extends BaseRepository<Member, Long> {
+public interface MemberRepository extends BaseRepository<Member, Long>, MemberSearch {
 
   boolean existsByUsername(String username);
 

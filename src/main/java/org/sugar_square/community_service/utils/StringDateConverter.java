@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import org.springframework.util.StringUtils;
 
 public class StringDateConverter {
@@ -25,6 +26,13 @@ public class StringDateConverter {
       return null;
     }
     return LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+  }
+
+  public static String localDateToString(final LocalDate date) {
+    if (Objects.isNull(date)) {
+      return "";
+    }
+    return date.format(DateTimeFormatter.ISO_LOCAL_DATE);
   }
 
   public static InstantYearMonth stringYearMonthToInstantStartEnd(String yearMonth) {
