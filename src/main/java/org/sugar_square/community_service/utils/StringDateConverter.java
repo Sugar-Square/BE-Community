@@ -35,7 +35,7 @@ public class StringDateConverter {
     return date.format(DateTimeFormatter.ISO_LOCAL_DATE);
   }
 
-  public static InstantYearMonth stringYearMonthToInstantStartEnd(String yearMonth) {
+  public static InstantStartEnd stringYearMonthToInstantStartEnd(String yearMonth) {
     YearMonth ym;
     if (!StringUtils.hasText(yearMonth)) {
       ym = YearMonth.now();
@@ -46,10 +46,10 @@ public class StringDateConverter {
     LocalDateTime endOfMonth = ym.atEndOfMonth().atTime(23, 59, 59);
     Instant startInstant = startOfMonth.toInstant(ZoneOffset.UTC);
     Instant endInstant = endOfMonth.toInstant(ZoneOffset.UTC);
-    return new InstantYearMonth(startInstant, endInstant);
+    return new InstantStartEnd(startInstant, endInstant);
   }
 
-  public record InstantYearMonth(Instant start, Instant end) {
+  public record InstantStartEnd(Instant start, Instant end) {
 
   }
 }

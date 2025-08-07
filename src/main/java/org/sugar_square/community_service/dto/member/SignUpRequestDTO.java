@@ -13,8 +13,8 @@ public record SignUpRequestDTO(
     @NotNull(message = "You must input a password")
     String password,
     @NotNull(message = "You must input a nickname")
-    String nickname,
-    String name,
+    String nickname, // TODO : 닉네임 글자수 제한 고려
+    String name, // TODO : 이름 글자수 제한 고려 (만약의 상황을 대비)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     String birthday,
     @Email(message = "You must input a valid email address")
