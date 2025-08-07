@@ -15,7 +15,7 @@ import org.sugar_square.community_service.exception.EntityNotFoundException;
 import org.sugar_square.community_service.repository.schedule.ScheduleRepository;
 import org.sugar_square.community_service.service.member.MemberService;
 import org.sugar_square.community_service.utils.StringDateConverter;
-import org.sugar_square.community_service.utils.StringDateConverter.InstantYearMonth;
+import org.sugar_square.community_service.utils.StringDateConverter.InstantStartEnd;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +51,7 @@ public class ScheduleService {
 
   public List<ScheduleResponseDTO> readForMonth(final String yearMonth) {
     // yearMonth 가 null 이면 현재 연월로 설정 (stringYearMonthToInstantStartEnd 메서드에서 처리)
-    InstantYearMonth startEnd = StringDateConverter.stringYearMonthToInstantStartEnd(yearMonth);
+    InstantStartEnd startEnd = StringDateConverter.stringYearMonthToInstantStartEnd(yearMonth);
     return scheduleRepository.findScheduleByScheduleDateBetween(startEnd.start(), startEnd.end())
         .stream()
         .map(ScheduleResponseDTO::fromEntity)

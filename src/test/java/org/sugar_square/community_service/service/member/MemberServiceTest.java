@@ -22,6 +22,7 @@ import org.sugar_square.community_service.TestData;
 import org.sugar_square.community_service.TestDataInitializer;
 import org.sugar_square.community_service.domain.member.Member;
 import org.sugar_square.community_service.dto.PageResponseDTO;
+import org.sugar_square.community_service.dto.member.MemberModifyDTO;
 import org.sugar_square.community_service.dto.member.MemberResponseDTO;
 import org.sugar_square.community_service.dto.member.SignUpRequestDTO;
 import org.sugar_square.community_service.exception.EntityNotFoundException;
@@ -143,5 +144,24 @@ public class MemberServiceTest {
         .hasSize(allMembers.size())
         .usingRecursiveComparison()
         .isEqualTo(allMembers);
+  }
+
+  @Test
+  @DisplayName("회원 정보 수정 테스트")
+  void modifyMemberTest() {
+    // given
+    final String nickname = "modified test nickname";
+    final String name = "modified test name";
+    final String birthday = null; // null 입력 테스트
+    final String email = "modified@email.com";
+    String[] expected = {nickname, name, birthday, email};
+    MemberModifyDTO modifyDTO = new MemberModifyDTO(nickname, name, birthday, email);
+    Member member = testData.getMembers().getFirst();
+    // when
+    memberService.modify(member.getId(), modifyDTO);
+    // then
+    assertThat(member)
+        .extracting("nickname", "name", "birthday", "email")
+        .containsExactly(expected);
   }
 }
