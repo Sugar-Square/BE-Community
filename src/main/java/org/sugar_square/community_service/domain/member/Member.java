@@ -58,4 +58,16 @@ public class Member extends BaseEntity {
     this.birthday = birthday;
     this.email = email;
   }
+
+  public void update(
+      final String nickname,
+      final String name,
+      final LocalDate birthday,
+      final String email
+  ) {
+    this.nickname = nickname;
+    this.name = name;
+    this.birthday = birthday;
+    this.email = email;
+  }
 }

@@ -2,6 +2,7 @@ package org.sugar_square.community_service.service.member;
 
 import static org.sugar_square.community_service.enums.RoleEnum.ROLE_USER;
 
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,10 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.sugar_square.community_service.domain.member.Member;
 import org.sugar_square.community_service.dto.PageResponseDTO;
+import org.sugar_square.community_service.dto.member.MemberModifyDTO;
 import org.sugar_square.community_service.dto.member.MemberResponseDTO;
 import org.sugar_square.community_service.dto.member.SignUpRequestDTO;
 import org.sugar_square.community_service.exception.EntityNotFoundException;
 import org.sugar_square.community_service.repository.member.MemberRepository;
+import org.sugar_square.community_service.utils.StringDateConverter;
 
 @Service
 @Transactional(readOnly = true)
@@ -62,6 +65,15 @@ public class MemberService {
       throw new EntityNotFoundException("Member not found : " + memberId);
     }
     memberRepository.softDeleteById(memberId);
+  }
+
+  @Transactional
+  public void modify(final Long memberId, final MemberModifyDTO modifyDTO) {
+    Member foundMember = findOneById(memberId);
+    LocalDate birthday = StringDateConverter.stringToLocalDate(modifyDTO.birthday());
+    // dirty checking
+    // nickname 을 제외한 필드들은 null 값이 그대로 입력될 수 있음
+    foundMember.update(modifyDTO.nickname(), modifyDTO.name(), birthday, modifyDTO.email());
   }
 
   public Member findOneById(final Long memberId) {
