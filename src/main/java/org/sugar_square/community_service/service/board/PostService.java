@@ -68,7 +68,11 @@ public class PostService {
   @Transactional
   public void modify(final Long postId, final PostModifyDTO modifyDTO) {
     Post foundPost = findOneById(postId);
-    Category newCategory = categoryService.findOneById(modifyDTO.categoryId());
+    // 기존과 새로 입력 받은 카테고리 비교 후 update
+    Category newCategory = foundPost.getCategory();
+    if (!newCategory.getId().equals(modifyDTO.categoryId())) {
+      newCategory = categoryService.findOneById(modifyDTO.categoryId());
+    }
     foundPost.update(modifyDTO.title(), modifyDTO.content(), newCategory);
   }
 
