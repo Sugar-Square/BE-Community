@@ -7,4 +7,5 @@ import org.sugar_square.community_service.repository.BaseRepository;
 @Repository
 public interface CategoryRepository extends BaseRepository<Category, Long> {
 
+  boolean existsByName(String name);
 }

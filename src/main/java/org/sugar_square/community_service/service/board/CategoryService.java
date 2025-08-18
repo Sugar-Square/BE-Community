@@ -14,9 +14,25 @@ public class CategoryService {
 
   private final CategoryRepository categoryRepository;
 
+  @Transactional
+  public Category register(final String name, final String description) {
+    checkDuplication(name);
+    Category newCategory = Category.builder()
+        .name(name)
+        .description(description)
+        .build();
+    return categoryRepository.save(newCategory);
+  }
+
   public Category findOneById(final Long categoryId) {
     return categoryRepository
         .findById(categoryId)
         .orElseThrow(() -> new EntityNotFoundException("category not found: " + categoryId));
+  }
+
+  public void checkDuplication(final String name) {
+    if (categoryRepository.existsByName(name)) {
+      throw new IllegalArgumentException("Duplication check failed: category name already exists");
+    }
   }
 }
