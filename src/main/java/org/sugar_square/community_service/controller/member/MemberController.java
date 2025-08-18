@@ -85,7 +85,7 @@ public class MemberController {
   }
 
   /* * * * * * * * * * * * * * * * * * * *
-                  NOT TEST
+            NOT CONTROLLER METHOD
    * * * * * * * * * * * * * * * * * * * */
   public record DuplicationCheckRequest(String username, String nickname) {
 
