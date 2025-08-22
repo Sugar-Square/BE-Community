@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +41,13 @@ public class CategoryController {
     }
     categoryService.checkDuplication(request.name); // name 이 중복이면 예외 발생
     return ResponseEntity.ok("Duplication check passed.");
+  }
+
+  @DeleteMapping("/{categoryId}")
+//  @Secured("ROLE_ADMIN")  // TODO : 관리자용 api (추가작업 필요)
+  public ResponseEntity<String> removeCategory(@PathVariable final Long categoryId) {
+    categoryService.remove(categoryId);
+    return ResponseEntity.ok("Remove category successfully.");
   }
 
   /* * * * * * * * * * * * * * * * * * * *

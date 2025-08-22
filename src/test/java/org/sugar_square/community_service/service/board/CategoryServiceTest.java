@@ -12,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.sugar_square.community_service.TestData;
 import org.sugar_square.community_service.TestDataInitializer;
 import org.sugar_square.community_service.domain.board.Category;
+import org.sugar_square.community_service.exception.EntityNotFoundException;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -47,5 +48,20 @@ public class CategoryServiceTest {
         .isNotNull()
         .extracting("name", "description")
         .containsExactly(newName, newDescription);
+  }
+
+  @Test
+  @DisplayName("카테고리 삭제 테스트")
+  void removeCategoryTest() {
+    // given
+    Category category = testData.getCategories().getFirst();
+    Long categoryId = category.getId();
+    // when
+    categoryService.remove(categoryId);
+    // then
+    Assertions.assertThatThrownBy(() -> categoryService.findOneById(categoryId))
+        .isNotNull()
+        .isInstanceOf(EntityNotFoundException.class)
+        .hasMessage("category not found: " + categoryId);
   }
 }

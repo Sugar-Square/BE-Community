@@ -1,6 +1,6 @@
 package org.sugar_square.community_service.dto.board;
 
-import lombok.NonNull;
+import jakarta.validation.constraints.NotNull;
 import org.sugar_square.community_service.domain.board.Category;
 import org.sugar_square.community_service.domain.board.Post;
 import org.sugar_square.community_service.domain.member.Member;
@@ -9,8 +9,8 @@ import org.sugar_square.community_service.dto.RequestDTO;
 public record PostRegisterDTO(
     String title,
     String content,
-    @NonNull Long memberId,
-    @NonNull Long categoryId
+    @NotNull Long memberId,
+    @NotNull Long categoryId
 ) implements RequestDTO<Post> {
 
   /**
