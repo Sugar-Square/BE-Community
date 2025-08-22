@@ -18,7 +18,7 @@ public class CategoryService {
   public Category register(final String name, final String description) {
     checkDuplication(name);
     Category newCategory = Category.builder()
-        .name(name)
+        .name(name) // unique
         .description(description)
         .build();
     return categoryRepository.save(newCategory);
