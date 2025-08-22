@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.sugar_square.community_service.domain.board.Category;
 import org.sugar_square.community_service.exception.EntityNotFoundException;
 import org.sugar_square.community_service.repository.board.CategoryRepository;
+import org.sugar_square.community_service.utils.StringUtils;
 
 @Service
 @Transactional(readOnly = true)
@@ -51,7 +52,8 @@ public class CategoryService {
   }
 
   public void checkDuplication(final String name) {
-    if (categoryRepository.existsByName(name)) {
+    String processedName = StringUtils.removeAllWhitespaces(name).toLowerCase();
+    if (categoryRepository.existsByNameWithoutSpaces(processedName)) {
       throw new IllegalArgumentException("Duplication check failed: category name already exists");
     }
   }
